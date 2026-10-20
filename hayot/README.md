@@ -2,7 +2,7 @@
 
 A Payme-style payment app built with Angular. It loads a provider catalog from `response.json`, renders categories, providers and form fields **dynamically**, and performs a payment in a modal. The request body is built dynamically and the form data is sent as `keyValue` pairs, saved in Firebase Firestore.
 
-- **Live demo:** _add the URL after `npm run deploy`_
+- **Live demo:** https://hayot-11a29.web.app
 - Not affiliated with Payme: the layout resembles payme.uz, the branding does not.
 
 ## Features
@@ -30,6 +30,7 @@ npm i
 npm run dev      # Firebase emulators (Firestore :8080, Auth :9099, UI :4000) + ng serve
 npm test
 npm run build
+npm run start:live   # local dev server against the real Firebase project (no Java needed)
 ```
 
 `npm run dev` works offline with the emulator (project id `demo-payme`), no Firebase account needed. Without Java, set `transactionBackend: 'local'` in `src/environments/environment.ts` to store transactions in `localStorage` and run `npm start`.
