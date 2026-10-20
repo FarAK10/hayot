@@ -82,7 +82,10 @@ a {
 
 @media (max-width: 600px) {
   .payflow-dialog {
+    width: 100vw !important;
+    height: 100dvh !important;
     max-width: 100vw !important;
+    max-height: 100dvh !important;
   }
   .payflow-dialog .mat-mdc-dialog-surface {
     border-radius: 0;

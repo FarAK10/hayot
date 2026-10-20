@@ -6,7 +6,10 @@
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "emulators": "firebase emulators:start --only firestore,auth --project demo-payme",
+    "dev": "concurrently \"npm:emulators\" \"ng serve\"",
+    "deploy": "ng build && firebase deploy --only hosting,firestore:rules,firestore:indexes"
   },
   "private": true,
   "packageManager": "npm@11.19.0",

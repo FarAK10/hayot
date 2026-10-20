@@ -1,0 +1,26 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{db}/documents {
+    match /transactions/{id} {
+      allow read: if request.auth != null && resource.data.uid == request.auth.uid;
+
+      allow create: if request.auth != null
+        && request.resource.data.uid == request.auth.uid
+        && request.resource.data.keys().hasOnly([
+             'uid','recipientId','categoryId','amount','commissionPercent',
+             'commissionAmount','total','currency','lang','keyValue','status','createdAt'])
+        && request.resource.data.recipientId is int
+        && request.resource.data.categoryId is int
+        && request.resource.data.amount is int && request.resource.data.amount > 0
+        && request.resource.data.commissionAmount is int && request.resource.data.commissionAmount >= 0
+        && request.resource.data.total == request.resource.data.amount + request.resource.data.commissionAmount
+        && request.resource.data.keyValue is list
+        && request.resource.data.keyValue.size() > 0
+        && request.resource.data.keyValue.size() <= 20
+        && request.resource.data.status == 'success'
+        && request.resource.data.createdAt == request.time;
+
+      allow update, delete: if false;
+    }
+  }
+}
