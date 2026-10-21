@@ -55,3 +55,9 @@ export function dependentsOf(key: string, fields: readonly Field[]): Field[] {
   walk(key);
   return result;
 }
+
+export function parentKeysOf(fields: readonly Field[]): string[] {
+  const requiredKeys = fields.map((field) => field.requireField);
+  const definedKeys = requiredKeys.filter((key): key is string => !!key);
+  return [...new Set(definedKeys)];
+}

@@ -4,7 +4,7 @@ import { FormControl } from '@angular/forms';
 import { AMOUNT_DIVISOR } from '../config/app.config.constants';
 import { Field } from '../models/catalog.models';
 import { RecipientId, Region, fieldOf, fieldsOf, recipientOf } from '../../testing/catalog.fixture';
-import { filterOptions, isVisible, dependentsOf } from './field-visibility.util';
+import { filterOptions, isVisible, dependentsOf, parentKeysOf } from './field-visibility.util';
 import { FormBuilderService } from './form-builder.service';
 import { DynamicForm } from './utils/dynamic-control.util';
 import { buildValidators } from './validators.factory';
@@ -87,6 +87,12 @@ describe('field-visibility', () => {
         SERVICE_OPTIONS_COUNT[region],
       );
     }
+  });
+  it('lists each parent key once', () => {
+    const electricityFields = fieldsOf(RecipientId.Electricity);
+
+    expect(parentKeysOf(electricityFields)).toEqual(['REGION']);
+    expect(parentKeysOf([])).toEqual([]);
   });
   it('finds dependents recursively', () => {
     const chain = [

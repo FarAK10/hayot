@@ -2,6 +2,7 @@ import { DestroyRef, Injectable, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormRecord } from '@angular/forms';
 import { Field, Recipient } from '../models/catalog.models';
+import { parentKeysOf } from './field-visibility.util';
 import { FormContext, refreshDependents } from './utils/dependents.util';
 import { DynamicControl, DynamicForm, buildControls } from './utils/dynamic-control.util';
 
@@ -19,11 +20,7 @@ export class FormBuilderService {
   }
 
   private linkDependents(context: FormContext, destroyRef: DestroyRef): void {
-    const parentKeys = new Set(
-      context.fields.map((field) => field.requireField).filter((key): key is string => !!key),
-    );
-
-    for (const parentKey of parentKeys) {
+    for (const parentKey of parentKeysOf(context.fields)) {
       context.controls[parentKey]?.valueChanges
         .pipe(takeUntilDestroyed(destroyRef))
         .subscribe(() => {

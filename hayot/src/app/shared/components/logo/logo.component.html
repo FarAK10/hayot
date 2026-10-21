@@ -1,9 +1,11 @@
+@let color = this.color();
+@let initials = this.initials();
 @if (!failed()) {
   @defer (on viewport) {
     <img [src]="'logos/' + logo()" [alt]="name()" (error)="onImageError()" />
   } @placeholder {
-    <span class="tile" [style.background]="color()" aria-hidden="true">{{ initials() }}</span>
+    <span class="tile" [style.background]="color" aria-hidden="true">{{ initials }}</span>
   }
 } @else {
-  <span class="tile" [style.background]="color()" aria-hidden="true">{{ initials() }}</span>
+  <span class="tile" [style.background]="color" aria-hidden="true">{{ initials }}</span>
 }
