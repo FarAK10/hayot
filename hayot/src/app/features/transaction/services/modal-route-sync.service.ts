@@ -1,81 +1,84 @@
-import { Injectable, Injector, effect, inject, untracked } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { DestroyRef, Injectable, Injector, inject } from '@angular/core';
+import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
+import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
-import { from, map, switchMap, take } from 'rxjs';
-import { RECIPIENT_QUERY_PARAM } from '../../../core/config/app.config.constants';
+import {
+  EMPTY,
+  Observable,
+  distinctUntilChanged,
+  filter,
+  from,
+  map,
+  switchMap,
+  take,
+  tap,
+} from 'rxjs';
+import {
+  PAYMENT_DIALOG_MAX_WIDTH,
+  PAYMENT_DIALOG_WIDTH,
+  RECIPIENT_QUERY_PARAM,
+} from '../../../core/config/app.config.constants';
 import { CatalogStore } from '../../../core/stores/catalog/catalog.store';
-
-const DIALOG_WIDTH = '480px';
-const DIALOG_MAX_WIDTH = '100vw';
 
 @Injectable({ providedIn: 'root' })
 export class ModalRouteSync {
   private readonly injector = inject(Injector);
+  private readonly destroyRef = inject(DestroyRef);
   private readonly dialog = inject(MatDialog);
   private readonly router = inject(Router);
-  private readonly catalogStore = inject(CatalogStore);
-  private ref: MatDialogRef<unknown> | null = null;
-  private opening = false;
-
   private readonly route = inject(ActivatedRoute);
+  private readonly catalogStore = inject(CatalogStore);
+
   private readonly recipientParam$ = this.route.queryParamMap.pipe(
     map((params) => params.get(RECIPIENT_QUERY_PARAM)),
+    distinctUntilChanged(),
   );
-  private readonly param = toSignal(this.recipientParam$, { initialValue: null });
 
   init(): void {
-    effect(
-      () => {
-        const raw = this.param();
-        const loaded = !this.catalogStore.loading();
-        untracked(() => this.sync(raw, loaded));
-      },
-      { injector: this.injector },
-    );
+    toObservable(this.catalogStore.loading, { injector: this.injector })
+      .pipe(
+        filter((loading) => !loading),
+        take(1),
+        switchMap(() => this.recipientParam$),
+        switchMap((param) => this.modalFor(param)),
+        takeUntilDestroyed(this.destroyRef),
+      )
+      .subscribe();
   }
 
-  private sync(raw: string | null, loaded: boolean): void {
-    if (raw === null) {
-      this.ref?.close();
-      return;
+  private modalFor(param: string | null): Observable<never> {
+    if (param === null) {
+      return EMPTY;
     }
-    if (!loaded || this.ref || this.opening) {
-      return;
-    }
-    const recipientId = Number(raw);
+    const recipientId = Number(param);
     if (!this.catalogStore.getRecipientById(recipientId)) {
       this.removeParam();
-      return;
+      return EMPTY;
     }
-    this.openModal(recipientId);
+    return this.openDialog(recipientId).pipe(tap({ complete: () => this.removeParam() }));
   }
 
-  private openModal(recipientId: number): void {
-    this.opening = true;
-    from(import('../payment-modal/payment-modal.component'))
-      .pipe(
-        map((module) => module.PaymentModalComponent),
-        switchMap((PaymentModalComponent) => {
-          this.ref = this.dialog.open(PaymentModalComponent, {
-            data: { recipientId },
-            width: DIALOG_WIDTH,
-            maxWidth: DIALOG_MAX_WIDTH,
-            panelClass: 'payflow-dialog',
-            ariaLabelledBy: 'payment-title',
-            autoFocus: 'first-tabbable',
-          });
-          this.opening = false;
-          return this.ref.afterClosed();
-        }),
-        take(1),
-      )
-      .subscribe(() => {
-        this.ref = null;
-        if (this.param() !== null) {
-          this.removeParam();
-        }
-      });
+  private openDialog(recipientId: number): Observable<never> {
+    return from(import('../payment-modal/payment-modal.component')).pipe(
+      switchMap(
+        ({ PaymentModalComponent }) =>
+          new Observable<never>((subscriber) => {
+            const ref = this.dialog.open(PaymentModalComponent, {
+              data: { recipientId },
+              width: PAYMENT_DIALOG_WIDTH,
+              maxWidth: PAYMENT_DIALOG_MAX_WIDTH,
+              panelClass: 'payflow-dialog',
+              ariaLabelledBy: 'payment-title',
+              autoFocus: 'first-tabbable',
+            });
+            const closed = ref.afterClosed().subscribe(() => subscriber.complete());
+            return () => {
+              closed.unsubscribe();
+              ref.close();
+            };
+          }),
+      ),
+    );
   }
 
   private removeParam(): void {

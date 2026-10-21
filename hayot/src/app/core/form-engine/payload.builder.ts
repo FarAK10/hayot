@@ -2,7 +2,6 @@ import { CURRENCY } from '../config/app.config.constants';
 import { Field, FieldValue, Lang, Recipient, isAmountField } from '../models/catalog.models';
 import { KeyValue, TransactionPayload } from '../models/transaction.models';
 import { calcCommission, toTiyin } from '../utils/amount.util';
-import { byOrd } from '../utils/catalog.util';
 import { FormValue, isEmpty } from './field-visibility.util';
 
 const isFilled = (field: Field, formValue: FormValue): boolean =>
@@ -18,7 +17,7 @@ export function buildPayload(
   formValue: FormValue,
   lang: Lang,
 ): TransactionPayload {
-  const filledFields = [...fields].sort(byOrd).filter((field) => isFilled(field, formValue));
+  const filledFields = fields.filter((field) => isFilled(field, formValue));
 
   const keyValue: KeyValue[] = filledFields.map((field) => ({
     key: field.key,

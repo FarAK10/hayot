@@ -20,6 +20,8 @@ export const LANG_STORAGE_KEY = 'payflow.lang';
 export const CATEGORY_ID_PARAM = 'id';
 export const RECIPIENT_QUERY_PARAM = 'recipient';
 export const NO_CATEGORY_ID = NaN;
+export const PAYMENT_DIALOG_WIDTH = '480px';
+export const PAYMENT_DIALOG_MAX_WIDTH = '100vw';
 
 export const EMULATOR_HOST = 'localhost';
 export const AUTH_EMULATOR_PORT = 9099;
