@@ -77,9 +77,9 @@ describe('PaymentModalComponent', () => {
     payButton.click();
     await fixture.whenStable();
 
-    const store = TestBed.inject(PaymentStore);
-    expect(store.status()).toBe(PaymentStatus.Success);
-    expect(store.payload()).toMatchObject(expectedPayload);
+    const paymentStore = TestBed.inject(PaymentStore);
+    expect(paymentStore.status()).toBe(PaymentStatus.Success);
+    expect(paymentStore.payload()).toMatchObject(expectedPayload);
   });
 
   it('keeps Pay disabled while the form is invalid', async () => {

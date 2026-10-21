@@ -13,9 +13,12 @@ import { HistoryItemComponent } from './history-item/history-item.component';
   styleUrl: './history-page.component.scss',
 })
 export class HistoryPageComponent {
-  protected readonly history = inject(HistoryStore);
+  private readonly historyStore = inject(HistoryStore);
+  protected readonly items = this.historyStore.items;
+  protected readonly loading = this.historyStore.loading;
+  protected readonly failed = this.historyStore.failed;
 
   constructor() {
-    this.history.watch();
+    this.historyStore.watch();
   }
 }

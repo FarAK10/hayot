@@ -20,22 +20,24 @@ import { TranslatePipe } from '../../../../shared/pipes/translate.pipe';
 export class HistoryItemComponent {
   readonly transaction = input.required<Transaction>();
 
-  private readonly catalog = inject(CatalogStore);
-  protected readonly lang = inject(LanguageStore);
+  private readonly catalogStore = inject(CatalogStore);
+  protected readonly languageStore = inject(LanguageStore);
   protected readonly formatTiyin = formatTiyin;
 
   protected readonly recipient = computed(() =>
-    this.catalog.recipient(this.transaction().recipientId),
+    this.catalogStore.recipient(this.transaction().recipientId),
   );
   protected readonly title = computed(() => {
     const recipient = this.recipient();
-    return recipient ? this.lang.localize(recipient.name) : `#${this.transaction().recipientId}`;
+    return recipient
+      ? this.languageStore.localize(recipient.name)
+      : `#${this.transaction().recipientId}`;
   });
   protected readonly rows = computed(() => {
     const { recipientId, keyValue } = this.transaction();
-    const fields = this.catalog.fieldsFor(recipientId);
-    const lang = this.lang.lang();
-    const sumLabel = this.lang.t('sum');
+    const fields = this.catalogStore.fieldsFor(recipientId);
+    const lang = this.languageStore.lang();
+    const sumLabel = this.languageStore.t('sum');
 
     return keyValue.map((pair) =>
       toDetailRow(

@@ -36,9 +36,9 @@ export class TextFieldComponent extends BaseField {
   protected readonly placeholder = computed(() => {
     const f = this.field();
     const t = this.tokens();
-    if (f.placeholder && this.lang.lang() === 'ru') {
+    if (f.placeholder && this.languageStore.lang() === 'ru') {
       return f.placeholder;
     }
-    return t ? maskTemplate(t) : this.lang.localize(f.description);
+    return t ? maskTemplate(t) : this.languageStore.localize(f.description);
   });
 }

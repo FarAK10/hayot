@@ -16,7 +16,7 @@ export class RecipientCardComponent {
   readonly recipient = input.required<Recipient>();
   readonly query = input('');
 
-  private readonly lang = inject(LanguageStore);
-  protected readonly name = computed(() => this.lang.localize(this.recipient().name));
+  private readonly languageStore = inject(LanguageStore);
+  protected readonly name = computed(() => this.languageStore.localize(this.recipient().name));
   protected readonly parts = computed(() => highlight(this.name(), this.query()));
 }

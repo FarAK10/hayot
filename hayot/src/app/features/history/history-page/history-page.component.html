@@ -1,9 +1,9 @@
-@let items = history.items();
+@let items = this.items();
 <div class="page">
   <h1>{{ 'historyTitle' | translate }}</h1>
-  @if (history.loading()) {
+  @if (loading()) {
     <mat-progress-bar mode="indeterminate" />
-  } @else if (history.failed()) {
+  } @else if (failed()) {
     <p class="state" role="alert">{{ 'loadError' | translate }}</p>
   } @else if (items.length === 0) {
     <p class="state">{{ 'historyEmpty' | translate }}</p>

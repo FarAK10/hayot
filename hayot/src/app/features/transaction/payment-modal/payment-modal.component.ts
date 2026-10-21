@@ -35,17 +35,19 @@ export interface PaymentModalData {
   styleUrl: './payment-modal.component.scss',
 })
 export class PaymentModalComponent {
-  protected readonly lang = inject(LanguageStore);
-  protected readonly store = inject(PaymentStore);
+  private readonly languageStore = inject(LanguageStore);
+  private readonly paymentStore = inject(PaymentStore);
+  protected readonly status = this.paymentStore.status;
+  protected readonly transactionId = this.paymentStore.transactionId;
   protected readonly PaymentStatus = PaymentStatus;
   private readonly dialogRef = inject(MatDialogRef<PaymentModalComponent>);
   private readonly dialogData = inject<PaymentModalData>(MAT_DIALOG_DATA);
-  private readonly catalog = inject(CatalogStore);
+  private readonly catalogStore = inject(CatalogStore);
   private readonly formBuilder = inject(FormBuilderService);
   private readonly destroyRef = inject(DestroyRef);
 
-  protected readonly recipient = this.catalog.recipient(this.dialogData.recipientId)!;
-  private readonly fields = this.catalog.fieldsFor(this.recipient.id);
+  protected readonly recipient = this.catalogStore.recipient(this.dialogData.recipientId)!;
+  private readonly fields = this.catalogStore.fieldsFor(this.recipient.id);
   protected readonly hasFields = this.fields.length > 0;
   protected readonly dynamicForm = this.formBuilder.create(
     this.fields,
@@ -59,18 +61,29 @@ export class PaymentModalComponent {
     { initialValue: 0 },
   );
 
-  protected readonly name = computed(() => this.lang.localize(this.recipient.name));
-  protected readonly fullName = computed(() => this.lang.localize(this.recipient.fullName));
-  protected readonly total = computed(() => this.store.payload()?.total ?? 0);
+  protected readonly name = computed(() => this.languageStore.localize(this.recipient.name));
+  protected readonly fullName = computed(() =>
+    this.languageStore.localize(this.recipient.fullName),
+  );
+  protected readonly total = computed(() => this.paymentStore.payload()?.total ?? 0);
 
   constructor() {
-    this.store.reset();
+    this.paymentStore.reset();
   }
 
   protected pay(): void {
-    this.store.pay(
-      buildPayload(this.recipient, this.fields, this.dynamicForm.form.value, this.lang.lang()),
+    this.paymentStore.pay(
+      buildPayload(
+        this.recipient,
+        this.fields,
+        this.dynamicForm.form.value,
+        this.languageStore.lang(),
+      ),
     );
+  }
+
+  protected retry(): void {
+    this.paymentStore.retry();
   }
 
   private readAmount(): number {

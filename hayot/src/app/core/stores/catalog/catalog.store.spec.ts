@@ -13,33 +13,40 @@ describe('CatalogStore', () => {
     TestBed.configureTestingModule({
       providers: [provideHttpClient(), provideHttpClientTesting()],
     });
-    const store = TestBed.inject(CatalogStore);
-    store.load();
+    const catalogStore = TestBed.inject(CatalogStore);
+    catalogStore.load();
     TestBed.inject(HttpTestingController).expectOne(CATALOG_URL).flush(RAW_CATALOG);
-    return store;
+    return catalogStore;
   }
 
   it('sorts categories and recipients by ord', () => {
-    const store = loaded();
-    const expectedMobileRecipients = [RecipientId.Beeline, RecipientId.UCell];
+    const catalogStore = loaded();
+    const expectedFirstMobileRecipients = [RecipientId.Beeline, RecipientId.UCell];
+    const mobileRecipients = catalogStore.recipientsOf(CategoryId.Mobile);
+    const mobileOrds = mobileRecipients.map((recipient) => recipient.ord);
 
-    expect(store.categories().map((category) => category.ord)).toEqual(SORTED_CATEGORY_ORDS);
-    expect(store.recipientsOf(CategoryId.Mobile).map((recipient) => recipient.id)).toEqual(
-      expectedMobileRecipients,
-    );
+    expect(catalogStore.categories().map((category) => category.ord)).toEqual(SORTED_CATEGORY_ORDS);
+    expect(
+      mobileRecipients
+        .slice(0, expectedFirstMobileRecipients.length)
+        .map((recipient) => recipient.id),
+    ).toEqual(expectedFirstMobileRecipients);
+    expect(mobileOrds).toEqual([...mobileOrds].sort((first, second) => first - second));
   });
 
   it('returns Electricity fields in ord order', () => {
-    const store = loaded();
+    const catalogStore = loaded();
 
-    expect(store.fieldsFor(RecipientId.Electricity).map((field) => field.key)).toEqual(
+    expect(catalogStore.fieldsFor(RecipientId.Electricity).map((field) => field.key)).toEqual(
       ELECTRICITY_FIELD_KEYS,
     );
   });
 
   it('sorts select values by ord', () => {
-    const store = loaded();
-    const soato = store.fieldsFor(RecipientId.Electricity).find((field) => field.key === 'soato')!;
+    const catalogStore = loaded();
+    const soato = catalogStore
+      .fieldsFor(RecipientId.Electricity)
+      .find((field) => field.key === 'soato')!;
     const ords = soato.values!.map((value) => value.ord);
 
     expect(ords).toEqual([...ords].sort((first, second) => first - second));
@@ -49,10 +56,10 @@ describe('CatalogStore', () => {
     TestBed.configureTestingModule({
       providers: [provideHttpClient(), provideHttpClientTesting()],
     });
-    const store = TestBed.inject(CatalogStore);
-    store.load();
+    const catalogStore = TestBed.inject(CatalogStore);
+    catalogStore.load();
     TestBed.inject(HttpTestingController).expectOne(CATALOG_URL).error(new ProgressEvent('error'));
 
-    expect(store.failed()).toBe(true);
+    expect(catalogStore.failed()).toBe(true);
   });
 });

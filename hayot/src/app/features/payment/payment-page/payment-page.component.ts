@@ -5,7 +5,6 @@ import { MatButton } from '@angular/material/button';
 import { map } from 'rxjs';
 import { SEARCH_QUERY_PARAM, SKELETON_COUNT } from '../../../core/config/app.config.constants';
 import { CatalogStore } from '../../../core/stores/catalog/catalog.store';
-import { LanguageStore } from '../../../core/stores/language/language.store';
 import { CategorySectionComponent } from '../category-section/category-section.component';
 import { TranslatePipe } from '../../../shared/pipes/translate.pipe';
 
@@ -17,8 +16,11 @@ import { TranslatePipe } from '../../../shared/pipes/translate.pipe';
   styleUrl: './payment-page.component.scss',
 })
 export class PaymentPageComponent {
-  protected readonly catalog = inject(CatalogStore);
-  protected readonly lang = inject(LanguageStore);
+  private readonly catalogStore = inject(CatalogStore);
+  protected readonly query = this.catalogStore.query;
+  protected readonly loading = this.catalogStore.loading;
+  protected readonly failed = this.catalogStore.failed;
+  protected readonly groups = this.catalogStore.groups;
   protected readonly skeleton = Array.from({ length: SKELETON_COUNT }, (_, index) => index);
 
   private readonly route = inject(ActivatedRoute);
@@ -31,10 +33,14 @@ export class PaymentPageComponent {
     effect(() => {
       const urlQuery = this.urlQuery();
       untracked(() => {
-        if (urlQuery !== this.catalog.query()) {
-          this.catalog.setSearchImmediate(urlQuery);
+        if (urlQuery !== this.catalogStore.query()) {
+          this.catalogStore.setSearchImmediate(urlQuery);
         }
       });
     });
+  }
+
+  protected reload(): void {
+    this.catalogStore.load();
   }
 }

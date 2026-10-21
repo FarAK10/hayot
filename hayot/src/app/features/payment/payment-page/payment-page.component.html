@@ -1,21 +1,21 @@
-@let query = catalog.query();
+@let query = this.query();
 <div class="page">
   <h1>{{ 'title' | translate }}</h1>
   <p class="subtitle">{{ 'subtitle' | translate }}</p>
 
-  @if (catalog.failed()) {
+  @if (failed()) {
     <div class="state" role="alert">
       <p>{{ 'loadError' | translate }}</p>
-      <button mat-flat-button (click)="catalog.load()">{{ 'retry' | translate }}</button>
+      <button mat-flat-button (click)="reload()">{{ 'retry' | translate }}</button>
     </div>
-  } @else if (catalog.loading()) {
+  } @else if (loading()) {
     <div class="cards" aria-busy="true">
       @for (placeholder of skeleton; track placeholder) {
         <div class="skeleton"></div>
       }
     </div>
   } @else {
-    @for (group of catalog.groups(); track group.category.id) {
+    @for (group of groups(); track group.category.id) {
       <app-category-section
         [category]="group.category"
         [recipients]="group.recipients"

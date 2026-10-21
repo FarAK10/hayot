@@ -13,7 +13,7 @@ const DIALOG_MAX_WIDTH = '100vw';
 export class ModalRouteSync {
   private readonly dialog = inject(MatDialog);
   private readonly router = inject(Router);
-  private readonly catalog = inject(CatalogStore);
+  private readonly catalogStore = inject(CatalogStore);
   private ref: MatDialogRef<unknown> | null = null;
   private opening = false;
 
@@ -26,7 +26,7 @@ export class ModalRouteSync {
   constructor() {
     effect(() => {
       const raw = this.param();
-      const loaded = !this.catalog.loading();
+      const loaded = !this.catalogStore.loading();
       untracked(() => this.sync(raw, loaded));
     });
   }
@@ -40,7 +40,7 @@ export class ModalRouteSync {
       return;
     }
     const recipientId = Number(raw);
-    if (!this.catalog.recipient(recipientId)) {
+    if (!this.catalogStore.recipient(recipientId)) {
       this.removeParam();
       return;
     }

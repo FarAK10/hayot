@@ -1,5 +1,5 @@
 @let name = this.name();
-@let status = store.status();
+@let status = this.status();
 <div class="modal">
   <header>
     <app-logo class="logo" [logo]="recipient.logo" [name]="name" [seed]="recipient.id" />
@@ -17,12 +17,12 @@
       <app-payment-success
         [recipientName]="name"
         [total]="total()"
-        [transactionId]="store.transactionId()"
+        [transactionId]="transactionId()"
         (done)="close()"
       />
     }
     @case (PaymentStatus.Error) {
-      <app-payment-error (retry)="store.retry()" (dismiss)="close()" />
+      <app-payment-error (retry)="retry()" (dismiss)="close()" />
     }
     @default {
       @if (hasFields) {

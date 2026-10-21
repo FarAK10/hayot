@@ -27,7 +27,7 @@ import { TranslatePipe } from '../../../../shared/pipes/translate.pipe';
 export class AmountFieldComponent extends BaseField {
   protected readonly hint = computed(() => {
     const r = this.recipient();
-    return this.lang.t('amountRange', {
+    return this.languageStore.t('amountRange', {
       min: formatSum(r.minAmount / AMOUNT_DIVISOR),
       max: formatSum(r.maxAmount / AMOUNT_DIVISOR),
     });

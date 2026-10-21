@@ -12,8 +12,8 @@ export abstract class BaseField {
   readonly recipient = input.required<Recipient>();
   readonly options = input.required<Signal<FieldOption[]>>();
 
-  protected readonly lang = inject(LanguageStore);
-  protected readonly label = computed(() => this.lang.localize(this.field().name));
+  protected readonly languageStore = inject(LanguageStore);
+  protected readonly label = computed(() => this.languageStore.localize(this.field().name));
 
   protected errorText(): string | null {
     const errors = this.control().errors;
@@ -22,14 +22,14 @@ export abstract class BaseField {
     }
     const r = this.recipient();
     if (errors['required']) {
-      return this.lang.t('required');
+      return this.languageStore.t('required');
     }
     if (errors['min']) {
-      return this.lang.t('min', { min: formatSum(r.minAmount / AMOUNT_DIVISOR) });
+      return this.languageStore.t('min', { min: formatSum(r.minAmount / AMOUNT_DIVISOR) });
     }
     if (errors['max']) {
-      return this.lang.t('max', { max: formatSum(r.maxAmount / AMOUNT_DIVISOR) });
+      return this.languageStore.t('max', { max: formatSum(r.maxAmount / AMOUNT_DIVISOR) });
     }
-    return this.lang.t('format');
+    return this.languageStore.t('format');
   }
 }

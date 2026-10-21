@@ -15,16 +15,17 @@ import { TranslatePipe } from '../../../shared/pipes/translate.pipe';
   styleUrl: './category-page.component.scss',
 })
 export class CategoryPageComponent {
-  protected readonly catalog = inject(CatalogStore);
+  private readonly catalogStore = inject(CatalogStore);
+  protected readonly loading = this.catalogStore.loading;
 
   private readonly route = inject(ActivatedRoute);
   private readonly categoryId$ = this.route.paramMap.pipe(
     map((params) => Number(params.get(CATEGORY_ID_PARAM))),
   );
   private readonly id = toSignal(this.categoryId$, { initialValue: NO_CATEGORY_ID });
-  protected readonly category = computed(() => this.catalog.category(this.id()));
+  protected readonly category = computed(() => this.catalogStore.category(this.id()));
   protected readonly recipients = computed(() => {
     const category = this.category();
-    return category ? this.catalog.recipientsOf(category.id) : [];
+    return category ? this.catalogStore.recipientsOf(category.id) : [];
   });
 }

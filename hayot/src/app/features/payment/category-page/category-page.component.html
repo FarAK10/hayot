@@ -4,7 +4,7 @@
   <a class="back" routerLink="/">← {{ 'back' | translate }}</a>
   @if (category) {
     <app-category-section [category]="category" [recipients]="recipients" />
-  } @else if (!catalog.loading()) {
+  } @else if (!loading()) {
     <p class="empty">{{ 'notFound' | translate }}</p>
   }
 </div>

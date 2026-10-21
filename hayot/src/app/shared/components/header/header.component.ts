@@ -30,8 +30,10 @@ import { TranslatePipe } from '../../pipes/translate.pipe';
   styleUrl: './header.component.scss',
 })
 export class HeaderComponent {
-  protected readonly lang = inject(LanguageStore);
-  protected readonly catalog = inject(CatalogStore);
+  private readonly languageStore = inject(LanguageStore);
+  private readonly catalogStore = inject(CatalogStore);
+  protected readonly currentLang = this.languageStore.lang;
+  protected readonly searchInput = this.catalogStore.input;
   private readonly router = inject(Router);
   protected readonly langs: readonly Lang[] = LANGS;
   protected readonly searchControl = new FormControl('', { nonNullable: true });
@@ -44,7 +46,7 @@ export class HeaderComponent {
 
   private syncUrlOnClear(): void {
     effect(() => {
-      if (!this.catalog.query()) {
+      if (!this.catalogStore.query()) {
         untracked(() => this.syncUrl(''));
       }
     });
@@ -53,24 +55,32 @@ export class HeaderComponent {
   private listenToTyping(): void {
     this.searchControl.valueChanges
       .pipe(
-        tap((value) => this.catalog.setSearchInput(value)),
+        tap((value) => this.catalogStore.setSearchInput(value)),
         debounceTime(SEARCH_DEBOUNCE),
         distinctUntilChanged(),
         takeUntilDestroyed(),
       )
       .subscribe((value) => {
-        this.catalog.setSearchQuery(value);
+        this.catalogStore.setSearchQuery(value);
         this.syncUrl(value.trim());
       });
   }
 
   private mirrorStoreInput(): void {
     effect(() => {
-      const input = this.catalog.input();
+      const input = this.catalogStore.input();
       if (input !== this.searchControl.value) {
         this.searchControl.setValue(input, { emitEvent: false });
       }
     });
+  }
+
+  protected clearSearch(): void {
+    this.catalogStore.clearSearch();
+  }
+
+  protected setLang(lang: Lang): void {
+    this.languageStore.setLang(lang);
   }
 
   private syncUrl(query: string): void {

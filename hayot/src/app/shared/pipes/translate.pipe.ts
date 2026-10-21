@@ -5,9 +5,9 @@ import { UiKey } from '../i18n/ui-strings';
 
 @Pipe({ name: 'translate', pure: false })
 export class TranslatePipe implements PipeTransform {
-  private readonly lang = inject(LanguageStore);
+  private readonly languageStore = inject(LanguageStore);
 
   transform(key: UiKey, params?: InterpolationParams): string {
-    return this.lang.t(key, params);
+    return this.languageStore.t(key, params);
   }
 }
