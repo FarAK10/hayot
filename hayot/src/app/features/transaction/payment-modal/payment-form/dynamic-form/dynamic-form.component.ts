@@ -7,13 +7,13 @@ import {
 } from '../../../../../core/form-engine/field-visibility.util';
 import { DynamicForm } from '../../../../../core/form-engine/utils/dynamic-control.util';
 import { Field, Recipient } from '../../../../../core/models/catalog.models';
-import { SyncPipe } from '../../../../../shared/pipes/sync.pipe';
 import { componentFor } from '../../../fields/field-registry';
+import { RenderedField } from './dynamic-form.models';
 
 @Component({
   selector: 'app-dynamic-form',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [NgComponentOutlet, SyncPipe],
+  imports: [NgComponentOutlet],
   templateUrl: './dynamic-form.component.html',
   styleUrl: './dynamic-form.component.scss',
 })
@@ -24,9 +24,22 @@ export class DynamicFormComponent {
 
   readonly rawValue = input.required<FormValue>();
 
-  protected readonly componentFor = componentFor;
-  protected readonly visibleFields = computed(() =>
-    visibleFieldsOf(this.fields(), this.rawValue()),
-  );
-  protected readonly optionsByKey = computed(() => optionsByKeyOf(this.fields(), this.rawValue()));
+  private readonly visibleFields = computed(() => visibleFieldsOf(this.fields(), this.rawValue()));
+  private readonly optionsByKey = computed(() => optionsByKeyOf(this.fields(), this.rawValue()));
+
+  protected readonly renderedFields = computed<RenderedField[]>(() => {
+    const { controls } = this.dynamicForm();
+    const recipient = this.recipient();
+    const optionsByKey = this.optionsByKey();
+    return this.visibleFields().map((field) => ({
+      key: field.key,
+      component: componentFor(field.type),
+      inputs: {
+        field,
+        control: controls[field.key],
+        recipient,
+        options: optionsByKey[field.key],
+      },
+    }));
+  });
 }

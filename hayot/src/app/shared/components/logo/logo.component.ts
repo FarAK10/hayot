@@ -5,7 +5,7 @@ import {
   LOGO_LIGHTNESS_PERCENT,
   LOGO_SATURATION_PERCENT,
 } from '../../../core/config/app.config.constants';
-import { getInitials } from '../../../core/utils/initials.util';
+import { getInitials } from '../../../core/utils/text.util';
 
 @Component({
   selector: 'app-logo',

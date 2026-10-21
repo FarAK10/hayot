@@ -1,7 +1,7 @@
-import { Field, FieldType, Lang } from '../models/catalog.models';
+import { Field, Lang, isAmountField, isSelectField } from '../models/catalog.models';
 import { KeyValue } from '../models/transaction.models';
 import { formatTiyin } from './amount.util';
-import { localize } from './localize.util';
+import { localize } from './text.util';
 import { formatWithMask, parseMask } from './mask.util';
 
 export interface DetailRow {
@@ -11,11 +11,11 @@ export interface DetailRow {
 }
 
 function displayValue(value: string, field: Field, lang: Lang, sumLabel: string): string {
-  if (field.type === FieldType.Amount) {
+  if (isAmountField(field)) {
     return `${formatTiyin(Number(value))} ${sumLabel}`;
   }
-  if (field.type === FieldType.Select) {
-    const option = field.values?.find((candidate) => candidate.value === value);
+  if (isSelectField(field)) {
+    const option = field.values.find((candidate) => candidate.value === value);
     return option ? localize(option.name, lang) : value;
   }
   const maskTokens = parseMask(field.mask);

@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform, inject } from '@angular/core';
 import { LanguageStore } from '../../core/stores/language/language.store';
-import { InterpolationParams } from '../../core/utils/interpolate.util';
+import { InterpolationParams } from '../../core/utils/text.util';
 import { UiKey } from '../i18n/ui-strings';
 
 @Pipe({ name: 'translate', pure: false })

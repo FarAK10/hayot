@@ -9,6 +9,7 @@ import {
 } from '../../../core/config/app.config.constants';
 import { PaymentStatus } from '../../../core/models/transaction.models';
 import { TransactionApi } from '../../../core/services/transaction.api';
+import { LanguageStore } from '../../../core/stores/language/language.store';
 import { CatalogStore } from '../../../core/stores/catalog/catalog.store';
 import { PaymentStore } from '../../../core/stores/payment/payment.store';
 import { formatSum } from '../../../core/utils/amount.util';
@@ -90,6 +91,24 @@ describe('PaymentModalComponent', () => {
     fixture.detectChanges();
 
     expect(element.querySelector<HTMLButtonElement>('button.pay')!.disabled).toBe(true);
+  });
+
+  it('shows the min-amount message once an amount below the minimum is touched', async () => {
+    const BELOW_MIN_SUM = 1;
+    const beeline = recipientOf(RecipientId.Beeline);
+    const fixture = await open(RecipientId.Beeline);
+    const expected = TestBed.inject(LanguageStore).t('min', {
+      min: formatSum(beeline.minAmount / AMOUNT_DIVISOR),
+    });
+    const element = fixture.nativeElement as HTMLElement;
+    const [, amountInput] = Array.from(element.querySelectorAll<HTMLInputElement>('input'));
+
+    type(amountInput, String(BELOW_MIN_SUM));
+    amountInput.dispatchEvent(new Event('blur'));
+    await fixture.whenStable();
+    fixture.detectChanges();
+
+    expect(element.querySelector('mat-error')?.textContent?.trim()).toBe(expected);
   });
 
   it('shows dependent Electricity fields only after a region is chosen', async () => {

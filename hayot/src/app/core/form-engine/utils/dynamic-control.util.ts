@@ -1,12 +1,11 @@
 import { FormControl, FormRecord } from '@angular/forms';
-import { Field, FieldType, Recipient } from '../../models/catalog.models';
+import { Field, FieldValue, Recipient, isAmountField } from '../../models/catalog.models';
 import { buildValidators } from '../validators.factory';
 
-export type DynamicControl = FormControl<string | number | null>;
+export type DynamicControl = FormControl<FieldValue>;
 export type DynamicForm = FormRecord<DynamicControl>;
 
-export const emptyValueFor = (field: Field): string | null =>
-  field.type === FieldType.Amount ? null : '';
+export const emptyValueFor = (field: Field): string | null => (isAmountField(field) ? null : '');
 
 export function buildControls(
   fields: readonly Field[],

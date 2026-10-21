@@ -1,5 +1,11 @@
 import data from '../../../public/data/response.json';
-import { CatalogResponse, Field, Recipient } from '../core/models/catalog.models';
+import {
+  CatalogResponse,
+  Field,
+  Recipient,
+  SelectField,
+  isSelectField,
+} from '../core/models/catalog.models';
 import { normalizeCatalog } from '../core/utils/catalog.util';
 
 export const RAW_CATALOG = data as unknown as CatalogResponse;
@@ -31,3 +37,11 @@ export const fieldsOf = (id: RecipientId): Field[] =>
 
 export const fieldOf = (id: RecipientId, key: string): Field =>
   fieldsOf(id).find((field) => field.key === key)!;
+
+export function selectFieldOf(id: RecipientId, key: string): SelectField {
+  const field = fieldOf(id, key);
+  if (!isSelectField(field)) {
+    throw new Error('Field ' + key + ' is not a SELECT');
+  }
+  return field;
+}

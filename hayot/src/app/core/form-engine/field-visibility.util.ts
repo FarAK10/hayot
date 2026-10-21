@@ -1,11 +1,11 @@
-import { Field, FieldOption } from '../models/catalog.models';
+import { Field, FieldOption, FieldValue, isSelectField } from '../models/catalog.models';
 
-export type FormValue = Record<string, unknown>;
+export type FormValue = Record<string, FieldValue | undefined>;
 
-export const isEmpty = (value: unknown): boolean =>
+export const isEmpty = (value: FieldValue | undefined): boolean =>
   value === null || value === undefined || value === '';
 
-export function parentValue(field: Field, value: FormValue): unknown {
+export function parentValue(field: Field, value: FormValue): FieldValue | undefined {
   return field.requireField ? value[field.requireField] : undefined;
 }
 
@@ -23,7 +23,10 @@ export function isVisible(field: Field, value: FormValue): boolean {
 }
 
 export function filterOptions(field: Field, value: FormValue): FieldOption[] {
-  const options = field.values ?? [];
+  if (!isSelectField(field)) {
+    return [];
+  }
+  const options = field.values;
   const dependsOnParent = !!field.requireField;
   const parentText = String(parentValue(field, value) ?? '');
 

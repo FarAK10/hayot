@@ -1,5 +1,5 @@
 import { FormRecord } from '@angular/forms';
-import { Field, FieldType } from '../../models/catalog.models';
+import { Field, isSelectField } from '../../models/catalog.models';
 import { directDependents, filterOptions, isVisible } from '../field-visibility.util';
 import { DynamicControl, emptyValueFor } from './dynamic-control.util';
 
@@ -20,7 +20,7 @@ function refreshDependent(dependent: Field, { form, controls }: FormContext): vo
     control.disable({ emitEvent: false });
   }
 
-  if (isNowVisible && dependent.type === FieldType.Select) {
+  if (isNowVisible && isSelectField(dependent)) {
     const options = filterOptions(dependent, form.getRawValue());
     if (options.length === 1) {
       control.setValue(options[0].value, { emitEvent: false });

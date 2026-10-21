@@ -44,10 +44,9 @@ export interface FieldOption {
   description?: Localized;
 }
 
-export interface Field {
+interface FieldBase {
   id: number;
   key: string;
-  type: FieldType;
   validation: string | null;
   placeholder: string | null;
   mask: string | null;
@@ -60,8 +59,30 @@ export interface Field {
   filterBy: string | null;
   name: Localized;
   description?: Localized;
-  values?: FieldOption[];
 }
+
+export interface AmountField extends FieldBase {
+  type: FieldType.Amount;
+}
+
+export interface SelectField extends FieldBase {
+  type: FieldType.Select;
+  values: FieldOption[];
+}
+
+export interface TextField extends FieldBase {
+  type: FieldType.Text | FieldType.PhoneNumber;
+}
+
+export type Field = AmountField | SelectField | TextField;
+
+export type FieldValue = string | number | null;
+
+export const isAmountField = (field: Field): field is AmountField =>
+  field.type === FieldType.Amount;
+
+export const isSelectField = (field: Field): field is SelectField =>
+  field.type === FieldType.Select;
 
 export interface CatalogResponse {
   categories: Category[];

@@ -1,4 +1,4 @@
-import { Injectable, effect, inject, untracked } from '@angular/core';
+import { Injectable, Injector, effect, inject, untracked } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -11,6 +11,7 @@ const DIALOG_MAX_WIDTH = '100vw';
 
 @Injectable({ providedIn: 'root' })
 export class ModalRouteSync {
+  private readonly injector = inject(Injector);
   private readonly dialog = inject(MatDialog);
   private readonly router = inject(Router);
   private readonly catalogStore = inject(CatalogStore);
@@ -23,12 +24,15 @@ export class ModalRouteSync {
   );
   private readonly param = toSignal(this.recipientParam$, { initialValue: null });
 
-  constructor() {
-    effect(() => {
-      const raw = this.param();
-      const loaded = !this.catalogStore.loading();
-      untracked(() => this.sync(raw, loaded));
-    });
+  init(): void {
+    effect(
+      () => {
+        const raw = this.param();
+        const loaded = !this.catalogStore.loading();
+        untracked(() => this.sync(raw, loaded));
+      },
+      { injector: this.injector },
+    );
   }
 
   private sync(raw: string | null, loaded: boolean): void {

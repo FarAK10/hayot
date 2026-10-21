@@ -1,14 +1,14 @@
 import { AMOUNT_DIVISOR } from '../config/app.config.constants';
 import { KeyValue } from '../models/transaction.models';
-import { RecipientId, Region, fieldOf } from '../../testing/catalog.fixture';
+import { RecipientId, Region, fieldOf, selectFieldOf } from '../../testing/catalog.fixture';
 import { formatTiyin } from './amount.util';
 import { toDetailRow } from './detail-row.util';
-import { localize } from './localize.util';
+import { localize } from './text.util';
 
 const SUM_LABEL = 'sum';
 
 describe('toDetailRow', () => {
-  const regionField = fieldOf(RecipientId.Electricity, 'REGION');
+  const regionField = selectFieldOf(RecipientId.Electricity, 'REGION');
   const amountField = fieldOf(RecipientId.Electricity, 'summa');
   const codeField = fieldOf(RecipientId.Electricity, 'customer_code');
   const phoneField = fieldOf(RecipientId.Beeline, 'phone_number');
@@ -22,7 +22,7 @@ describe('toDetailRow', () => {
 
   it('shows the option name instead of a select value, in the active language', () => {
     const pair: KeyValue = { key: 'REGION', value: Region.TashkentCity };
-    const option = regionField.values!.find((candidate) => candidate.value === pair.value)!;
+    const option = regionField.values.find((candidate) => candidate.value === pair.value)!;
 
     expect(toDetailRow(pair, regionField, 'uz', SUM_LABEL).value).toBe(localize(option.name, 'uz'));
     expect(toDetailRow(pair, regionField, 'ru', SUM_LABEL).label).toBe(

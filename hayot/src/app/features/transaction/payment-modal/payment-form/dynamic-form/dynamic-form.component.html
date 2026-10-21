@@ -1,18 +1,5 @@
-@let dynamicForm = this.dynamicForm();
-@let recipient = this.recipient();
-@let optionsByKey = this.optionsByKey();
-@for (field of visibleFields(); track field.key) {
+@for (rendered of renderedFields(); track rendered.key) {
   <div class="row">
-    <ng-container
-      *ngComponentOutlet="
-        componentFor | sync: field.type;
-        inputs: {
-          field: field,
-          control: dynamicForm.controls[field.key],
-          recipient: recipient,
-          options: optionsByKey[field.key],
-        }
-      "
-    />
+    <ng-container *ngComponentOutlet="rendered.component; inputs: rendered.inputs" />
   </div>
 }

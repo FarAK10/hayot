@@ -21,11 +21,8 @@ import { FormBuilderService } from '../../../core/form-engine/form-builder.servi
 import { buildPayload } from '../../../core/form-engine/payload.builder';
 import { PaymentErrorComponent } from './payment-error/payment-error.component';
 import { PaymentFormComponent } from './payment-form/payment-form.component';
+import { PaymentModalData } from './payment-modal.models';
 import { PaymentSuccessComponent } from './payment-success/payment-success.component';
-
-export interface PaymentModalData {
-  recipientId: number;
-}
 
 @Component({
   selector: 'app-payment-modal',

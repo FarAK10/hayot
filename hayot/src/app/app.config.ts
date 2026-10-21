@@ -20,7 +20,7 @@ export const appConfig: ApplicationConfig = {
     { provide: TransactionApi, useClass: FirebaseTransactionApi },
     provideAppInitializer(() => {
       inject(CatalogStore).load();
-      inject(ModalRouteSync);
+      inject(ModalRouteSync).init();
     }),
   ],
 };

@@ -3,6 +3,7 @@ import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { CategoryId, RAW_CATALOG, RecipientId } from '../../../testing/catalog.fixture';
 import { CATALOG_URL } from '../../config/app.config.constants';
+import { isSelectField } from '../../models/catalog.models';
 import { CatalogStore } from './catalog.store';
 
 const SORTED_CATEGORY_ORDS = [1, 4, 23];
@@ -46,8 +47,9 @@ describe('CatalogStore', () => {
     const catalogStore = loaded();
     const soato = catalogStore
       .getFieldsFor(RecipientId.Electricity)
+      .filter(isSelectField)
       .find((field) => field.key === 'soato')!;
-    const ords = soato.values!.map((value) => value.ord);
+    const ords = soato.values.map((value) => value.ord);
 
     expect(ords).toEqual([...ords].sort((first, second) => first - second));
   });

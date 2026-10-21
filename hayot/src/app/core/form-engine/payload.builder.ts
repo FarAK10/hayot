@@ -1,5 +1,5 @@
 import { CURRENCY } from '../config/app.config.constants';
-import { Field, FieldType, Lang, Recipient } from '../models/catalog.models';
+import { Field, FieldValue, Lang, Recipient, isAmountField } from '../models/catalog.models';
 import { KeyValue, TransactionPayload } from '../models/transaction.models';
 import { calcCommission, toTiyin } from '../utils/amount.util';
 import { byOrd } from '../utils/catalog.util';
@@ -8,9 +8,7 @@ import { FormValue, isEmpty } from './field-visibility.util';
 const isFilled = (field: Field, formValue: FormValue): boolean =>
   field.key in formValue && !isEmpty(formValue[field.key]);
 
-const isAmountField = (field: Field): boolean => field.type === FieldType.Amount;
-
-function toPayloadValue(field: Field, value: unknown): string {
+function toPayloadValue(field: Field, value: FieldValue | undefined): string {
   return isAmountField(field) ? String(toTiyin(Number(value))) : String(value);
 }
 

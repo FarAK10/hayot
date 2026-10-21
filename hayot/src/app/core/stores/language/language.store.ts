@@ -8,9 +8,8 @@ import {
   withState,
 } from '@ngrx/signals';
 import { Lang, Localized } from '../../models/catalog.models';
-import { InterpolationParams, interpolate } from '../../utils/interpolate.util';
+import { InterpolationParams, interpolate, localize } from '../../utils/text.util';
 import { DEFAULT_LANG, persistLang, readStoredLang } from '../../utils/language.util';
-import { localize } from '../../utils/localize.util';
 import { UI_STRINGS, UiKey } from '../../../shared/i18n/ui-strings';
 
 export const LanguageStore = signalStore(
