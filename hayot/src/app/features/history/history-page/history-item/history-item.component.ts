@@ -25,7 +25,7 @@ export class HistoryItemComponent {
   protected readonly formatTiyin = formatTiyin;
 
   protected readonly recipient = computed(() =>
-    this.catalogStore.recipient(this.transaction().recipientId),
+    this.catalogStore.getRecipientById(this.transaction().recipientId),
   );
   protected readonly title = computed(() => {
     const recipient = this.recipient();
@@ -35,7 +35,7 @@ export class HistoryItemComponent {
   });
   protected readonly rows = computed(() => {
     const { recipientId, keyValue } = this.transaction();
-    const fields = this.catalogStore.fieldsFor(recipientId);
+    const fields = this.catalogStore.getFieldsFor(recipientId);
     const lang = this.languageStore.lang();
     const sumLabel = this.languageStore.t('sum');
 

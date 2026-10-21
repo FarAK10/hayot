@@ -28,17 +28,22 @@ export class TextFieldComponent extends BaseField {
   protected readonly digitsOnly = computed(() =>
     DIGITS_ONLY_VALIDATION.test(this.field().validation ?? ''),
   );
-  protected readonly inputMode = computed(() =>
-    this.field().type === FieldType.PhoneNumber || this.tokens() || this.digitsOnly()
-      ? 'tel'
-      : 'text',
-  );
+  protected readonly inputMode = computed(() => {
+    const isPhone = this.field().type === FieldType.PhoneNumber;
+    const wantsNumericKeypad = isPhone || !!this.tokens() || this.digitsOnly();
+    return wantsNumericKeypad ? 'tel' : 'text';
+  });
   protected readonly placeholder = computed(() => {
-    const f = this.field();
-    const t = this.tokens();
-    if (f.placeholder && this.languageStore.lang() === 'ru') {
-      return f.placeholder;
+    const field = this.field();
+    const tokens = this.tokens();
+    const isRussian = this.languageStore.lang() === 'ru';
+
+    if (field.placeholder && isRussian) {
+      return field.placeholder;
     }
-    return t ? maskTemplate(t) : this.languageStore.localize(f.description);
+    if (tokens) {
+      return maskTemplate(tokens);
+    }
+    return this.languageStore.localize(field.description);
   });
 }

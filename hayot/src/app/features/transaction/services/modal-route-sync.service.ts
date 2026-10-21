@@ -40,7 +40,7 @@ export class ModalRouteSync {
       return;
     }
     const recipientId = Number(raw);
-    if (!this.catalogStore.recipient(recipientId)) {
+    if (!this.catalogStore.getRecipientById(recipientId)) {
       this.removeParam();
       return;
     }

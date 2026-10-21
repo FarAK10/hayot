@@ -37,7 +37,7 @@ describe('CatalogStore', () => {
   it('returns Electricity fields in ord order', () => {
     const catalogStore = loaded();
 
-    expect(catalogStore.fieldsFor(RecipientId.Electricity).map((field) => field.key)).toEqual(
+    expect(catalogStore.getFieldsFor(RecipientId.Electricity).map((field) => field.key)).toEqual(
       ELECTRICITY_FIELD_KEYS,
     );
   });
@@ -45,7 +45,7 @@ describe('CatalogStore', () => {
   it('sorts select values by ord', () => {
     const catalogStore = loaded();
     const soato = catalogStore
-      .fieldsFor(RecipientId.Electricity)
+      .getFieldsFor(RecipientId.Electricity)
       .find((field) => field.key === 'soato')!;
     const ords = soato.values!.map((value) => value.ord);
 

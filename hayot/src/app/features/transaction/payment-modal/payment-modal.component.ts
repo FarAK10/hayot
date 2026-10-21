@@ -53,8 +53,8 @@ export class PaymentModalComponent implements OnInit {
   private readonly formBuilder = inject(FormBuilderService);
   private readonly destroyRef = inject(DestroyRef);
 
-  protected readonly recipient = this.catalogStore.recipient(this.dialogData.recipientId)!;
-  protected readonly fields = this.catalogStore.fieldsFor(this.recipient.id);
+  protected readonly recipient = this.catalogStore.getRecipientById(this.dialogData.recipientId)!;
+  protected readonly fields = this.catalogStore.getFieldsFor(this.recipient.id);
   protected readonly hasFields = this.fields.length > 0;
   protected readonly dynamicForm = this.formBuilder.create(
     this.fields,

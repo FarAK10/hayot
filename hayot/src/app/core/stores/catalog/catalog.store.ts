@@ -69,8 +69,9 @@ export const CatalogStore = signalStore(
     },
     recipientsOf: (categoryId: number): Recipient[] =>
       store.recipientsByCategory().get(categoryId) ?? [],
-    category: (id: number): Category | undefined => store.categoryById().get(id),
-    recipient: (id: number): Recipient | undefined => store.recipientById().get(id),
-    fieldsFor: (recipientId: number): Field[] => store.fieldsByRecipient().get(recipientId) ?? [],
+    getCategoryById: (id: number): Category | undefined => store.categoryById().get(id),
+    getRecipientById: (id: number): Recipient | undefined => store.recipientById().get(id),
+    getFieldsFor: (recipientId: number): Field[] =>
+      store.fieldsByRecipient().get(recipientId) ?? [],
   })),
 );

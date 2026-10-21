@@ -23,7 +23,7 @@ export class CategoryPageComponent {
     map((params) => Number(params.get(CATEGORY_ID_PARAM))),
   );
   private readonly id = toSignal(this.categoryId$, { initialValue: NO_CATEGORY_ID });
-  protected readonly category = computed(() => this.catalogStore.category(this.id()));
+  protected readonly category = computed(() => this.catalogStore.getCategoryById(this.id()));
   protected readonly recipients = computed(() => {
     const category = this.category();
     return category ? this.catalogStore.recipientsOf(category.id) : [];
