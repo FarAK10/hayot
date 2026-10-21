@@ -1,4 +1,11 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, computed, inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  DestroyRef,
+  OnInit,
+  computed,
+  inject,
+} from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatIconButton } from '@angular/material/button';
@@ -34,7 +41,7 @@ export interface PaymentModalData {
   templateUrl: './payment-modal.component.html',
   styleUrl: './payment-modal.component.scss',
 })
-export class PaymentModalComponent {
+export class PaymentModalComponent implements OnInit {
   private readonly languageStore = inject(LanguageStore);
   private readonly paymentStore = inject(PaymentStore);
   protected readonly status = this.paymentStore.status;
@@ -67,7 +74,7 @@ export class PaymentModalComponent {
   );
   protected readonly total = computed(() => this.paymentStore.payload()?.total ?? 0);
 
-  constructor() {
+  ngOnInit(): void {
     this.paymentStore.reset();
   }
 

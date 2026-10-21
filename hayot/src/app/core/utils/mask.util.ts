@@ -20,9 +20,9 @@ export function parseMask(mask: string | null | undefined): MaskToken[] | null {
     }
     consumed += match[0].length;
 
-    const [, escapedChar, slotCount, plainChar] = match;
-    if (slotCount !== undefined) {
-      tokens.push(...slots(Number(slotCount)));
+    const [, escapedChar, slotRepeat, plainChar] = match;
+    if (slotRepeat !== undefined) {
+      tokens.push(...slots(Number(slotRepeat)));
       continue;
     }
     tokens.push(literal(escapedChar ?? plainChar));
@@ -37,7 +37,7 @@ export function parseMask(mask: string | null | undefined): MaskToken[] | null {
 }
 
 export const slotCount = (tokens: MaskToken[]): number =>
-  tokens.filter((t) => t.kind === 'slot').length;
+  tokens.filter((token) => token.kind === 'slot').length;
 
 export function fixedPrefix(tokens: MaskToken[]): string {
   let prefix = '';
@@ -51,7 +51,7 @@ export function fixedPrefix(tokens: MaskToken[]): string {
 }
 
 export function maskTemplate(tokens: MaskToken[]): string {
-  return tokens.map((t) => (t.kind === 'slot' ? '_' : t.char)).join('');
+  return tokens.map((token) => (token.kind === 'slot' ? '_' : token.char)).join('');
 }
 
 export function formatWithMask(raw: string, tokens: MaskToken[]): string {
@@ -59,21 +59,22 @@ export function formatWithMask(raw: string, tokens: MaskToken[]): string {
   if (!digits) {
     return '';
   }
-  let out = '';
-  let di = 0;
-  let pendingLiterals = '';
+  let formatted = '';
+  let digitIndex = 0;
+  let literalsBeforeNextDigit = '';
   for (const token of tokens) {
     if (token.kind === 'literal') {
-      pendingLiterals += token.char;
-    } else {
-      if (di >= digits.length) {
-        break;
-      }
-      out += pendingLiterals + digits[di++];
-      pendingLiterals = '';
+      literalsBeforeNextDigit += token.char;
+      continue;
     }
+    if (digitIndex >= digits.length) {
+      break;
+    }
+    formatted += literalsBeforeNextDigit + digits[digitIndex];
+    digitIndex += 1;
+    literalsBeforeNextDigit = '';
   }
-  return out;
+  return formatted;
 }
 
 export function extractRaw(display: string, tokens: MaskToken[]): string {

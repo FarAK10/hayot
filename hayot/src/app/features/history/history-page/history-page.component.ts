@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/core';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatProgressBar } from '@angular/material/progress-bar';
 import { HistoryStore } from '../../../core/stores/history/history.store';
@@ -12,13 +12,13 @@ import { HistoryItemComponent } from './history-item/history-item.component';
   templateUrl: './history-page.component.html',
   styleUrl: './history-page.component.scss',
 })
-export class HistoryPageComponent {
+export class HistoryPageComponent implements OnInit {
   private readonly historyStore = inject(HistoryStore);
   protected readonly items = this.historyStore.items;
   protected readonly loading = this.historyStore.loading;
   protected readonly failed = this.historyStore.failed;
 
-  constructor() {
+  ngOnInit(): void {
     this.historyStore.getHistory();
   }
 }
