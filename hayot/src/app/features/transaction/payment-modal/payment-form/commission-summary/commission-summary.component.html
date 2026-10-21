@@ -1,0 +1,15 @@
+@let calc = this.calc();
+<dl>
+  <div>
+    <dt>{{ 'amount' | translate }}</dt>
+    <dd>{{ formatTiyin | sync: calc.amount }} {{ 'sum' | translate }}</dd>
+  </div>
+  <div>
+    <dt>{{ 'commission' | translate }} {{ recipient().commission }}%</dt>
+    <dd>{{ formatTiyin | sync: calc.commissionAmount }} {{ 'sum' | translate }}</dd>
+  </div>
+  <div class="total">
+    <dt>{{ 'total' | translate }}</dt>
+    <dd>{{ formatTiyin | sync: calc.total }} {{ 'sum' | translate }}</dd>
+  </div>
+</dl>

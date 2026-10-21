@@ -1,0 +1,16 @@
+@let recipient = this.recipient();
+@let name = this.name();
+<a
+  class="card"
+  [routerLink]="[]"
+  [queryParams]="{ recipient: recipient.id }"
+  queryParamsHandling="merge"
+  [attr.aria-label]="name"
+>
+  <app-logo [logo]="recipient.logo" [name]="name" [seed]="recipient.id" />
+  <span class="name">
+    @for (part of parts(); track $index) {
+      <span [class.match]="part.match">{{ part.text }}</span>
+    }
+  </span>
+</a>

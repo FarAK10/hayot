@@ -33,7 +33,7 @@ npm run build
 npm run start:live   # local dev server against the real Firebase project (no Java needed)
 ```
 
-`npm run dev` works offline with the emulator (project id `demo-payme`), no Firebase account needed. Without Java, set `transactionBackend: 'local'` in `src/environments/environment.ts` to store transactions in `localStorage` and run `npm start`.
+`npm run dev` works offline with the emulator (project id `demo-payme`), no Firebase account needed, but the emulator requires Java 11+. Without Java, run `npm run start:live` against the real Firebase project.
 
 ## Deploying your own
 
@@ -49,11 +49,11 @@ Stays on the free **Spark** plan: no Cloud Functions or Storage.
 
 ```
 src/app/
-├── core/       models, stores (SignalStore), transaction API (Firebase / local), pure utils (mask, amount, search)
+├── core/       models, stores (SignalStore), transaction API (Firebase / local), form engine, pure utils (mask, amount, search)
 ├── shared/     header, logo, input directives (mask, digits-only, amount), UI strings
 └── features/
     ├── payment/      catalog pages, category sections, recipient cards, search results
-    ├── transaction/  payment modal, dynamic form engine, field components, payload builder
+    ├── transaction/  payment modal, dynamic form, field components
     └── history/      past transactions
 ```
 
@@ -76,6 +76,7 @@ src/app/
 
 - UCell `clientid` has `lengthMax: 7` while its `validation` requires 9 digits. Masked fields use the regex and mask, lengths are ignored.
 - Electricity `summa` has `lengthMax: 7` while `maxAmount` is 500 000 000. For `AMOUNT` fields the amount limits win, lengths are ignored.
+- Electricity `SERVICE_ID` has `lengthMax: 5`, but its option values look like `3014,3013`. For `SELECT` fields lengths are ignored, otherwise every valid choice would fail.
 - Beeline's pattern `9[0|1]\d{7}` also accepts a literal `|`; harmless, kept as is.
 - Some `en` / `uz` strings are Russian or Cyrillic; shown as given.
 - Recipient 4449 ("Горячая вода и отопление") has no fields in the data, so its modal shows "payment unavailable".

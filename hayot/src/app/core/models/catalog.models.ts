@@ -3,7 +3,19 @@ export const LANGS: readonly Lang[] = ['ru', 'uz', 'en'];
 
 export type Localized = Partial<Record<Lang, string>>;
 
-export type FieldType = 'TEXT' | 'PHONE_NUMBER' | 'AMOUNT' | 'SELECT' | (string & {});
+export enum FieldType {
+  Text = 'TEXT',
+  PhoneNumber = 'PHONE_NUMBER',
+  Amount = 'AMOUNT',
+  Select = 'SELECT',
+}
+
+export enum LoadStatus {
+  Idle = 'idle',
+  Loading = 'loading',
+  Loaded = 'loaded',
+  Error = 'error',
+}
 
 export interface Category {
   id: number;

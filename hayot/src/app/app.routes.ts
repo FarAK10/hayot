@@ -5,17 +5,23 @@ export const routes: Routes = [
     path: '',
     pathMatch: 'full',
     loadComponent: () =>
-      import('./features/payment/payment-page.component').then((m) => m.PaymentPageComponent),
+      import('./features/payment/payment-page/payment-page.component').then(
+        (m) => m.PaymentPageComponent,
+      ),
   },
   {
     path: 'category/:id',
     loadComponent: () =>
-      import('./features/payment/category-page.component').then((m) => m.CategoryPageComponent),
+      import('./features/payment/category-page/category-page.component').then(
+        (m) => m.CategoryPageComponent,
+      ),
   },
   {
     path: 'history',
     loadComponent: () =>
-      import('./features/history/history-page.component').then((m) => m.HistoryPageComponent),
+      import('./features/history/history-page/history-page.component').then(
+        (m) => m.HistoryPageComponent,
+      ),
   },
   { path: '**', redirectTo: '' },
 ];

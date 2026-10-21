@@ -1,0 +1,7 @@
+dist
+.angular
+.firebase
+node_modules
+public
+package-lock.json
+*.pdf

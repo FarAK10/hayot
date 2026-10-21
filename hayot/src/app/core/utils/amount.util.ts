@@ -1,13 +1,11 @@
-import { AMOUNT_DIVISOR } from '../config/app.config.constants';
+import { AMOUNT_DIVISOR, PERCENT_BASE } from '../config/app.config.constants';
+import { DIGIT_GROUPS } from './regex.util';
 
 export const toTiyin = (sum: number): number => Math.round(sum * AMOUNT_DIVISOR);
 export const fromTiyin = (tiyin: number): number => tiyin / AMOUNT_DIVISOR;
 
-/** 1500000 -> "1 500 000" (non-breaking spaces) */
 export function formatSum(sum: number): string {
-  return Math.round(sum)
-    .toString()
-    .replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+  return Math.round(sum).toString().replace(DIGIT_GROUPS, ' ');
 }
 
 export interface CommissionResult {
@@ -16,8 +14,9 @@ export interface CommissionResult {
   total: number;
 }
 
-/** All values in tiyin. */
 export function calcCommission(amountTiyin: number, percent: number): CommissionResult {
-  const commissionAmount = Math.round((amountTiyin * percent) / 100);
+  const commissionAmount = Math.round((amountTiyin * percent) / PERCENT_BASE);
   return { amount: amountTiyin, commissionAmount, total: amountTiyin + commissionAmount };
 }
+
+export const formatTiyin = (tiyin: number): string => formatSum(fromTiyin(tiyin));

@@ -1,5 +1,27 @@
-/** minAmount / maxAmount in response.json are tiyin (1 sum = 100 tiyin). */
 export const AMOUNT_DIVISOR = 100;
 export const PREVIEW_COUNT = 5;
 export const SEARCH_DEBOUNCE = 250;
+export const SEARCH_QUERY_PARAM = 'q';
 export const CURRENCY = 'UZS';
+export const PERCENT_BASE = 100;
+export const HISTORY_LIMIT = 50;
+export const MAX_AMOUNT_DIGITS = 12;
+export const SKELETON_COUNT = 10;
+export const MAX_INITIALS = 2;
+export const DIGIT_GROUP_SIZE = 3;
+
+export const LOGO_HUE_STEP = 47;
+export const FULL_CIRCLE_DEGREES = 360;
+export const LOGO_SATURATION_PERCENT = 55;
+export const LOGO_LIGHTNESS_PERCENT = 38;
+export const SPINNER_DIAMETER = 20;
+export const CATALOG_URL = 'data/response.json';
+export const LANG_STORAGE_KEY = 'payflow.lang';
+export const CATEGORY_ID_PARAM = 'id';
+export const RECIPIENT_QUERY_PARAM = 'recipient';
+export const NO_CATEGORY_ID = NaN;
+
+export const EMULATOR_HOST = 'localhost';
+export const AUTH_EMULATOR_PORT = 9099;
+export const FIRESTORE_EMULATOR_PORT = 8080;
+export const TRANSACTIONS_COLLECTION = 'transactions';

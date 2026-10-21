@@ -29,9 +29,7 @@ yarn-error.log
 !.vscode/mcp.json
 .history/*
 
-backend-response.json
-PLAN_1.md  
-Тестовое задание HayotBank (Frontend).pdf
+
 
 # Miscellaneous
 /.angular/cache

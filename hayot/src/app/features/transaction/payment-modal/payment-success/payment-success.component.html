@@ -1,0 +1,12 @@
+<section class="result" role="status">
+  <span class="material-symbols-outlined icon" aria-hidden="true">check_circle</span>
+  <h3>{{ 'success' | translate }}</h3>
+  <p class="total">{{ formatTiyin | sync: total() }} {{ 'sum' | translate }}</p>
+  <dl>
+    <dt>{{ 'recipient' | translate }}</dt>
+    <dd>{{ recipientName() }}</dd>
+    <dt>{{ 'transactionId' | translate }}</dt>
+    <dd class="mono">{{ transactionId() }}</dd>
+  </dl>
+  <button mat-flat-button type="button" (click)="onDone()">{{ 'done' | translate }}</button>
+</section>

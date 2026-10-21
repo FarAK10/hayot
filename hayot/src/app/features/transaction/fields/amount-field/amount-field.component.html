@@ -1,0 +1,11 @@
+@let errorText = this.errorText();
+<mat-form-field appearance="outline" subscriptSizing="dynamic">
+  <mat-label>{{ label() }}</mat-label>
+  <input matInput [formControl]="control()" appAmountInput inputmode="numeric" autocomplete="off" />
+  <span matSuffix class="suffix">{{ 'sum' | translate }}</span>
+  @if (errorText) {
+    <mat-error>{{ errorText }}</mat-error>
+  } @else {
+    <mat-hint>{{ hint() }}</mat-hint>
+  }
+</mat-form-field>

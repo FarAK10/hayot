@@ -2,83 +2,101 @@ import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import data from '../../../../../public/data/response.json';
-import { CatalogResponse } from '../../../core/models/catalog.models';
-import { LocalTransactionApi } from '../../../core/services/local-transaction.api';
+import {
+  AMOUNT_DIVISOR,
+  CATALOG_URL,
+  PERCENT_BASE,
+} from '../../../core/config/app.config.constants';
+import { PaymentStatus } from '../../../core/models/transaction.models';
 import { TransactionApi } from '../../../core/services/transaction.api';
-import { CATALOG_URL, CatalogStore } from '../../../core/stores/catalog.store';
-import { PaymentStore } from '../../../core/stores/payment.store';
+import { CatalogStore } from '../../../core/stores/catalog/catalog.store';
+import { PaymentStore } from '../../../core/stores/payment/payment.store';
+import { formatSum } from '../../../core/utils/amount.util';
+import { InMemoryTransactionApi } from '../../../testing/in-memory-transaction.api';
+import { RAW_CATALOG, RecipientId, fieldsOf, recipientOf } from '../../../testing/catalog.fixture';
+import { noop } from '../../../core/utils/noop.util';
 import { PaymentModalComponent } from './payment-modal.component';
 
-async function open(recipientId: number): Promise<ComponentFixture<PaymentModalComponent>> {
+async function open(recipientId: RecipientId): Promise<ComponentFixture<PaymentModalComponent>> {
   TestBed.configureTestingModule({
     providers: [
       provideHttpClient(),
       provideHttpClientTesting(),
-      { provide: TransactionApi, useClass: LocalTransactionApi },
+      { provide: TransactionApi, useClass: InMemoryTransactionApi },
       { provide: MAT_DIALOG_DATA, useValue: { recipientId } },
-      { provide: MatDialogRef, useValue: { close: () => {} } },
+      { provide: MatDialogRef, useValue: { close: noop } },
     ],
   });
-  const p = TestBed.inject(CatalogStore).load();
-  TestBed.inject(HttpTestingController).expectOne(CATALOG_URL).flush(data as unknown as CatalogResponse);
-  await p;
+  TestBed.inject(CatalogStore).load();
+  TestBed.inject(HttpTestingController).expectOne(CATALOG_URL).flush(RAW_CATALOG);
   const fixture = TestBed.createComponent(PaymentModalComponent);
   await fixture.whenStable();
   return fixture;
 }
 
-const type = (el: HTMLInputElement, text: string) => {
-  el.value = text;
-  el.dispatchEvent(new Event('input'));
+const type = (input: HTMLInputElement, text: string) => {
+  input.value = text;
+  input.dispatchEvent(new Event('input'));
 };
 
 describe('PaymentModalComponent', () => {
-  beforeEach(() => localStorage.clear());
+  const PHONE_DIGITS = '901234567';
+  const MASKED_PHONE = '998(90) 123-45-67';
+  const INVALID_PHONE_DIGITS = '921234567';
+  const PAY_AMOUNT_SUM = 50_000;
 
   it('pays Beeline end-to-end with a masked phone and an amount', async () => {
-    const fixture = await open(23303);
-    const el = fixture.nativeElement as HTMLElement;
-    const inputs = el.querySelectorAll<HTMLInputElement>('input');
-    expect(inputs).toHaveLength(2);
+    const beeline = recipientOf(RecipientId.Beeline);
+    const amountTiyin = PAY_AMOUNT_SUM * AMOUNT_DIVISOR;
+    const commissionTiyin = (amountTiyin * beeline.commission) / PERCENT_BASE;
+    const expectedPayload = {
+      recipientId: beeline.id,
+      amount: amountTiyin,
+      commissionAmount: commissionTiyin,
+      total: amountTiyin + commissionTiyin,
+      keyValue: [
+        { key: 'phone_number', value: PHONE_DIGITS },
+        { key: 'summa', value: String(amountTiyin) },
+      ],
+    };
+    const fixture = await open(RecipientId.Beeline);
+    const element = fixture.nativeElement as HTMLElement;
+    const inputs = element.querySelectorAll<HTMLInputElement>('input');
+    const [phoneInput, amountInput] = Array.from(inputs);
+    expect(inputs).toHaveLength(fieldsOf(RecipientId.Beeline).length);
 
-    type(inputs[0], '901234567');
-    expect(inputs[0].value).toBe('998(90) 123-45-67');
-    type(inputs[1], '50000');
-    expect(inputs[1].value).toBe('50 000');
+    type(phoneInput, PHONE_DIGITS);
+    expect(phoneInput.value).toBe(MASKED_PHONE);
+    type(amountInput, String(PAY_AMOUNT_SUM));
+    expect(amountInput.value).toBe(formatSum(PAY_AMOUNT_SUM));
     await fixture.whenStable();
     fixture.detectChanges();
 
-    const pay = el.querySelector<HTMLButtonElement>('button.pay')!;
-    expect(pay.disabled).toBe(false);
-    pay.click();
+    const payButton = element.querySelector<HTMLButtonElement>('button.pay')!;
+    expect(payButton.disabled).toBe(false);
+    payButton.click();
     await fixture.whenStable();
 
     const store = TestBed.inject(PaymentStore);
-    expect(store.status()).toBe('success');
-    expect(store.payload()).toMatchObject({
-      recipientId: 23303,
-      amount: 5000000,
-      commissionAmount: 75000,
-      total: 5075000,
-      keyValue: [
-        { key: 'phone_number', value: '901234567' },
-        { key: 'summa', value: '5000000' },
-      ],
-    });
+    expect(store.status()).toBe(PaymentStatus.Success);
+    expect(store.payload()).toMatchObject(expectedPayload);
   });
 
   it('keeps Pay disabled while the form is invalid', async () => {
-    const fixture = await open(23303);
-    const el = fixture.nativeElement as HTMLElement;
-    type(el.querySelectorAll<HTMLInputElement>('input')[0], '921234567');
+    const fixture = await open(RecipientId.Beeline);
+    const element = fixture.nativeElement as HTMLElement;
+
+    type(element.querySelector<HTMLInputElement>('input')!, INVALID_PHONE_DIGITS);
     fixture.detectChanges();
-    expect(el.querySelector<HTMLButtonElement>('button.pay')!.disabled).toBe(true);
+
+    expect(element.querySelector<HTMLButtonElement>('button.pay')!.disabled).toBe(true);
   });
 
   it('shows dependent Electricity fields only after a region is chosen', async () => {
-    const fixture = await open(4012);
-    const el = fixture.nativeElement as HTMLElement;
-    expect(el.querySelectorAll('app-select-field')).toHaveLength(1);
+    const initialSelectFields = 1;
+    const fixture = await open(RecipientId.Electricity);
+    const element = fixture.nativeElement as HTMLElement;
+
+    expect(element.querySelectorAll('app-select-field')).toHaveLength(initialSelectFields);
   });
 });

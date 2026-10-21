@@ -1,16 +1,37 @@
+import { AMOUNT_DIVISOR, PERCENT_BASE } from '../config/app.config.constants';
 import { calcCommission, formatSum, toTiyin } from './amount.util';
 
+const AMOUNT_SUM = 150_000;
+const AMOUNT_TIYIN = AMOUNT_SUM * AMOUNT_DIVISOR;
+const COMMISSION_PERCENT = 1;
+
+const LARGE_SUM = 1_500_000;
+const NBSP = ' ';
+const LARGE_SUM_TEXT = ['1', '500', '000'].join(NBSP);
+
 describe('amount.util', () => {
-  it('converts sum to tiyin', () => expect(toTiyin(150000)).toBe(15000000));
-  it('formats with separators', () => expect(formatSum(1500000)).toBe('1 500 000'));
-  it('rounds commission and totals up', () => {
-    expect(calcCommission(15000000, 1)).toEqual({
-      amount: 15000000,
-      commissionAmount: 150000,
-      total: 15150000,
-    });
-    const r = calcCommission(50001, 1.5);
-    expect(r.commissionAmount).toBe(750);
-    expect(r.total).toBe(50751);
+  it('converts sum to tiyin', () => expect(toTiyin(AMOUNT_SUM)).toBe(AMOUNT_TIYIN));
+  it('formats with separators', () => expect(formatSum(LARGE_SUM)).toBe(LARGE_SUM_TEXT));
+
+  it('calculates the commission and the total', () => {
+    const commissionAmount = (AMOUNT_TIYIN * COMMISSION_PERCENT) / PERCENT_BASE;
+    const expected = {
+      amount: AMOUNT_TIYIN,
+      commissionAmount,
+      total: AMOUNT_TIYIN + commissionAmount,
+    };
+
+    expect(calcCommission(AMOUNT_TIYIN, COMMISSION_PERCENT)).toEqual(expected);
+  });
+
+  it('rounds a fractional commission and keeps the total consistent', () => {
+    const oddAmountTiyin = 50_001;
+    const fractionalPercent = 1.5;
+    const roundedCommission = Math.round((oddAmountTiyin * fractionalPercent) / PERCENT_BASE);
+
+    const result = calcCommission(oddAmountTiyin, fractionalPercent);
+
+    expect(result.commissionAmount).toBe(roundedCommission);
+    expect(result.total).toBe(oddAmountTiyin + roundedCommission);
   });
 });

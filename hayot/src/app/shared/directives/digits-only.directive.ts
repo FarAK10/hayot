@@ -1,15 +1,16 @@
 import { Directive, ElementRef, HostListener, inject } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { onlyDigits } from '../../core/utils/regex.util';
+import { noop } from '../../core/utils/noop.util';
 
-/** Strips non-digit characters as the user types; the control value is a digit string. */
 @Directive({
   selector: 'input[appDigitsOnly]',
   providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: DigitsOnlyDirective, multi: true }],
 })
 export class DigitsOnlyDirective implements ControlValueAccessor {
   private readonly el = inject<ElementRef<HTMLInputElement>>(ElementRef).nativeElement;
-  private onChange: (v: string) => void = () => {};
-  private onTouched: () => void = () => {};
+  private onChange: (v: string) => void = noop;
+  private onTouched: () => void = noop;
 
   writeValue(value: string | null): void {
     this.el.value = value ?? '';
@@ -26,7 +27,7 @@ export class DigitsOnlyDirective implements ControlValueAccessor {
 
   @HostListener('input')
   protected onInput(): void {
-    const digits = this.el.value.replace(/\D/g, '');
+    const digits = onlyDigits(this.el.value);
     this.el.value = digits;
     this.onChange(digits);
   }

@@ -1,0 +1,10 @@
+@let category = this.category();
+@let recipients = this.recipients();
+<div class="page">
+  <a class="back" routerLink="/">← {{ 'back' | translate }}</a>
+  @if (category) {
+    <app-category-section [category]="category" [recipients]="recipients" />
+  } @else if (!catalog.loading()) {
+    <p class="empty">{{ 'notFound' | translate }}</p>
+  }
+</div>

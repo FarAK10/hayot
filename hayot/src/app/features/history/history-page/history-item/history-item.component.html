@@ -1,0 +1,27 @@
+@let transaction = this.transaction();
+@let recipient = this.recipient();
+@let title = this.title();
+<mat-expansion-panel>
+  <mat-expansion-panel-header>
+    <mat-panel-title class="title">
+      @if (recipient) {
+        <app-logo class="logo" [logo]="recipient.logo" [name]="title" [seed]="recipient.id" />
+      }
+      <span>
+        {{ title }}
+        <small>{{ transaction.createdAt | date: 'dd.MM.yyyy HH:mm' }}</small>
+      </span>
+    </mat-panel-title>
+    <mat-panel-description class="total">
+      {{ formatTiyin | sync: transaction.total }} {{ 'sum' | translate }}
+    </mat-panel-description>
+  </mat-expansion-panel-header>
+  <dl>
+    @for (row of rows(); track row.key) {
+      <dt>{{ row.label }}</dt>
+      <dd>{{ row.value }}</dd>
+    }
+    <dt>{{ 'commission' | translate }} {{ transaction.commissionPercent }}%</dt>
+    <dd>{{ formatTiyin | sync: transaction.commissionAmount }} {{ 'sum' | translate }}</dd>
+  </dl>
+</mat-expansion-panel>

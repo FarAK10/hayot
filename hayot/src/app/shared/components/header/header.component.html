@@ -1,0 +1,38 @@
+<mat-toolbar class="bar">
+  <a class="brand" routerLink="/" (click)="catalog.clearSearch()">Pay<b>Flow</b></a>
+
+  <div class="search">
+    <label class="visually-hidden" for="search">{{ 'search' | translate }}</label>
+    <input
+      id="search"
+      type="search"
+      autocomplete="off"
+      [placeholder]="'search' | translate"
+      [formControl]="searchControl"
+      (keydown.escape)="catalog.clearSearch()"
+    />
+    @if (catalog.input()) {
+      <button
+        mat-icon-button
+        type="button"
+        [attr.aria-label]="'clear' | translate"
+        (click)="catalog.clearSearch()"
+      >
+        <span class="material-symbols-outlined">close</span>
+      </button>
+    }
+  </div>
+
+  <a class="link" routerLink="/history">{{ 'history' | translate }}</a>
+
+  <mat-button-toggle-group
+    hideSingleSelectionIndicator
+    [value]="lang.lang()"
+    [attr.aria-label]="'language' | translate"
+    (change)="lang.setLang($event.value)"
+  >
+    @for (language of langs; track language) {
+      <mat-button-toggle [value]="language">{{ language | uppercase }}</mat-button-toggle>
+    }
+  </mat-button-toggle-group>
+</mat-toolbar>

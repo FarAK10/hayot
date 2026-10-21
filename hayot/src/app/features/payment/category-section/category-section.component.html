@@ -1,0 +1,16 @@
+@let category = this.category();
+@let recipients = this.recipients();
+<section>
+  <h2>
+    {{ category.name | localize }}
+    <span class="count">{{ recipients.length }}</span>
+    @if (preview() && recipients.length > previewCount) {
+      <a class="more" [routerLink]="['/category', category.id]">{{ 'more' | translate }}</a>
+    }
+  </h2>
+  <div class="cards">
+    @for (recipient of shown(); track recipient.id) {
+      <app-recipient-card [recipient]="recipient" [query]="query()" />
+    }
+  </div>
+</section>

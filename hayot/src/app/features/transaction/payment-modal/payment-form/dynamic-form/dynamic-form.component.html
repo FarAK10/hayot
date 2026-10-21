@@ -1,0 +1,17 @@
+@let dynamicForm = this.dynamicForm();
+@let recipient = this.recipient();
+@for (field of dynamicForm.visibleFields(); track field.key) {
+  <div class="row">
+    <ng-container
+      *ngComponentOutlet="
+        componentFor | sync: field.type;
+        inputs: {
+          field: field,
+          control: dynamicForm.form.controls[field.key],
+          recipient: recipient,
+          options: dynamicForm.optionsFor | sync: field.key,
+        }
+      "
+    />
+  </div>
+}

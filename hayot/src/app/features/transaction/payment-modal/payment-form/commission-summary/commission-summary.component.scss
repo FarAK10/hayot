@@ -1,0 +1,28 @@
+dl {
+  margin: 0;
+  padding: 12px 16px;
+  background: var(--bg);
+  border-radius: var(--radius-input);
+}
+div {
+  display: flex;
+  justify-content: space-between;
+  padding: 4px 0;
+}
+dt {
+  color: var(--muted);
+}
+dd {
+  margin: 0;
+  font-weight: 500;
+}
+.total {
+  border-top: 1px solid var(--border);
+  margin-top: 4px;
+  padding-top: 8px;
+}
+.total dt,
+.total dd {
+  color: var(--text);
+  font-weight: 600;
+}

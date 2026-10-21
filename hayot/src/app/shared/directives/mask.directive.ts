@@ -1,11 +1,8 @@
 import { Directive, ElementRef, HostListener, inject, input } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { noop } from '../../core/utils/noop.util';
 import { MaskToken, extractRaw, formatWithMask } from '../../core/utils/mask.util';
 
-/**
- * Formats the input as the user types (e.g. `998(93) 123-45-67`) while the form
- * control holds only the raw slot digits (`931234567`).
- */
 @Directive({
   selector: 'input[appMask]',
   providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: MaskDirective, multi: true }],
@@ -14,8 +11,8 @@ export class MaskDirective implements ControlValueAccessor {
   readonly tokens = input.required<MaskToken[]>({ alias: 'appMask' });
 
   private readonly el = inject<ElementRef<HTMLInputElement>>(ElementRef).nativeElement;
-  private onChange: (v: string) => void = () => {};
-  private onTouched: () => void = () => {};
+  private onChange: (v: string) => void = noop;
+  private onTouched: () => void = noop;
 
   writeValue(raw: string | null): void {
     this.el.value = formatWithMask(raw ?? '', this.tokens());

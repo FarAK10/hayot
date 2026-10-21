@@ -1,0 +1,17 @@
+@let items = history.items();
+<div class="page">
+  <h1>{{ 'historyTitle' | translate }}</h1>
+  @if (history.loading()) {
+    <mat-progress-bar mode="indeterminate" />
+  } @else if (history.failed()) {
+    <p class="state" role="alert">{{ 'loadError' | translate }}</p>
+  } @else if (items.length === 0) {
+    <p class="state">{{ 'historyEmpty' | translate }}</p>
+  } @else {
+    <mat-accordion>
+      @for (transaction of items; track transaction.id) {
+        <app-history-item [transaction]="transaction" />
+      }
+    </mat-accordion>
+  }
+</div>

@@ -1,0 +1,25 @@
+.result {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 8px;
+  padding: 16px 0;
+}
+
+h3 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.icon {
+  font-size: 56px;
+  width: 56px;
+  height: 56px;
+  color: var(--danger);
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+}

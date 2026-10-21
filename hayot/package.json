@@ -4,13 +4,18 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
+    "start:live": "ng serve --configuration live",
+    "dev": "concurrently \"npm:emulators\" \"ng serve\"",
+    "emulators": "firebase emulators:start --only firestore,auth --project demo-payme",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "emulators": "firebase emulators:start --only firestore,auth --project demo-payme",
-    "start:live": "ng serve --configuration live",
-    "dev": "concurrently \"npm:emulators\" \"ng serve\"",
-    "deploy": "ng build && firebase deploy --only hosting,firestore:rules,firestore:indexes"
+    "deploy": "ng build && firebase deploy --only hosting,firestore:rules,firestore:indexes",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write \"src/**/*.{ts,html,scss,json}\"",
+    "format:check": "prettier --check \"src/**/*.{ts,html,scss,json}\"",
+    "prepare": "cd .. && husky hayot/.husky"
   },
   "private": true,
   "packageManager": "npm@11.19.0",
@@ -32,11 +37,27 @@
     "@angular/build": "^22.2.3",
     "@angular/cli": "^22.2.3",
     "@angular/compiler-cli": "^22.2.0",
+    "@eslint/js": "^10.0.1",
+    "angular-eslint": "^22.6.0",
     "concurrently": "^10.0.6",
+    "eslint": "^10.13.0",
+    "eslint-config-prettier": "^10.1.8",
     "firebase-tools": "^15.34.0",
+    "husky": "^9.1.7",
     "jsdom": "^30.0.0",
+    "lint-staged": "^17.6.0",
     "prettier": "^3.8.1",
     "typescript": "~6.0.2",
+    "typescript-eslint": "^8.72.0",
     "vitest": "^5.0.0"
+  },
+  "lint-staged": {
+    "*.{ts,html}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{scss,json,md}": [
+      "prettier --write"
+    ]
   }
 }

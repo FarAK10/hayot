@@ -13,78 +13,83 @@ import {
   serverTimestamp,
   where,
 } from 'firebase/firestore';
-import { Observable } from 'rxjs';
+import { Observable, defer, from, map, of, shareReplay, switchMap } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { Transaction, TransactionPayload } from '../models/transaction.models';
+import {
+  AUTH_EMULATOR_PORT,
+  EMULATOR_HOST,
+  FIRESTORE_EMULATOR_PORT,
+  HISTORY_LIMIT,
+  TRANSACTIONS_COLLECTION,
+} from '../config/app.config.constants';
+import { PaymentStatus, Transaction, TransactionPayload } from '../models/transaction.models';
+import { toTransaction } from '../utils/transaction.util';
 import { TransactionApi } from './transaction.api';
 
 export class FirebaseClient implements TransactionApi {
   private readonly app: FirebaseApp = initializeApp(environment.firebase);
   private readonly auth: Auth = getAuth(this.app);
   private readonly db: Firestore = getFirestore(this.app);
-  private user: Promise<string> | null = null;
+
+  private readonly uid$: Observable<string> = defer(() => from(this.auth.authStateReady())).pipe(
+    switchMap(() => this.currentUser$()),
+    map((user) => user.uid),
+    shareReplay({ bufferSize: 1, refCount: false }),
+  );
 
   constructor() {
     if (environment.useEmulators) {
-      connectAuthEmulator(this.auth, 'http://localhost:9099', { disableWarnings: true });
-      connectFirestoreEmulator(this.db, 'localhost', 8080);
+      connectAuthEmulator(this.auth, `http://${EMULATOR_HOST}:${AUTH_EMULATOR_PORT}`, {
+        disableWarnings: true,
+      });
+      connectFirestoreEmulator(this.db, EMULATOR_HOST, FIRESTORE_EMULATOR_PORT);
     }
   }
 
-  async create(payload: TransactionPayload): Promise<string> {
-    const uid = await this.uid();
-    const ref = await addDoc(collection(this.db, 'transactions'), {
-      ...payload,
-      uid,
-      status: 'success',
-      createdAt: serverTimestamp(),
-    });
-    return ref.id;
+  create(payload: TransactionPayload): Observable<string> {
+    return this.uid$.pipe(
+      switchMap((uid) =>
+        from(
+          addDoc(collection(this.db, TRANSACTIONS_COLLECTION), {
+            ...payload,
+            uid,
+            status: PaymentStatus.Success,
+            createdAt: serverTimestamp(),
+          }),
+        ),
+      ),
+      map((reference) => reference.id),
+    );
   }
 
   history(): Observable<Transaction[]> {
-    return new Observable<Transaction[]>((subscriber) => {
-      let unsubscribe = () => {};
-      let closed = false;
-      this.uid()
-        .then((uid) => {
-          if (closed) return;
-          const q = query(
-            collection(this.db, 'transactions'),
-            where('uid', '==', uid),
-            orderBy('createdAt', 'desc'),
-            limit(50),
-          );
-          unsubscribe = onSnapshot(
-            q,
-            (snap) =>
-              subscriber.next(
-                snap.docs.map((d) => {
-                  const data = d.data({ serverTimestamps: 'estimate' });
-                  return { ...data, id: d.id, createdAt: data['createdAt']?.toMillis() ?? Date.now() } as Transaction;
-                }),
-              ),
-            (err) => subscriber.error(err),
-          );
-        })
-        .catch((err) => subscriber.error(err));
-      return () => {
-        closed = true;
-        unsubscribe();
-      };
-    });
+    return this.uid$.pipe(switchMap((uid) => this.watchTransactions(uid)));
   }
 
-  /** Signs in anonymously on first use. */
-  private uid(): Promise<string> {
-    this.user ??= this.auth
-      .authStateReady()
-      .then(async () => this.auth.currentUser ?? (await signInAnonymously(this.auth)).user)
-      .then((u) => u.uid)
-      .catch((e) => {
-        this.user = null;
-        throw e;
-      });
-    return this.user;
+  private currentUser$() {
+    const signedIn = this.auth.currentUser;
+    if (signedIn) {
+      return of(signedIn);
+    }
+    return from(signInAnonymously(this.auth)).pipe(map((credential) => credential.user));
+  }
+
+  private watchTransactions(uid: string): Observable<Transaction[]> {
+    return new Observable<Transaction[]>((subscriber) =>
+      onSnapshot(
+        this.userTransactionsQuery(uid),
+        (snapshot) => subscriber.next(snapshot.docs.map(toTransaction)),
+        (error) => subscriber.error(error),
+      ),
+    );
+  }
+
+  private userTransactionsQuery(uid: string) {
+    return query(
+      collection(this.db, TRANSACTIONS_COLLECTION),
+      where('uid', '==', uid),
+      orderBy('createdAt', 'desc'),
+      limit(HISTORY_LIMIT),
+    );
   }
 }

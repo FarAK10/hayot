@@ -1,5 +1,12 @@
 import { Lang } from './catalog.models';
 
+export enum PaymentStatus {
+  Idle = 'idle',
+  Pending = 'pending',
+  Success = 'success',
+  Error = 'error',
+}
+
 export interface KeyValue {
   key: string;
   value: string;
@@ -8,12 +15,9 @@ export interface KeyValue {
 export interface TransactionPayload {
   recipientId: number;
   categoryId: number;
-  /** tiyin */
   amount: number;
   commissionPercent: number;
-  /** tiyin */
   commissionAmount: number;
-  /** tiyin */
   total: number;
   currency: string;
   lang: Lang;
@@ -23,7 +27,6 @@ export interface TransactionPayload {
 export interface Transaction extends TransactionPayload {
   id: string;
   uid?: string;
-  status: 'success';
-  /** epoch millis */
+  status: PaymentStatus.Success;
   createdAt: number;
 }

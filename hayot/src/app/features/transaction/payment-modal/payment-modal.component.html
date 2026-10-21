@@ -1,60 +1,40 @@
+@let name = this.name();
+@let status = store.status();
 <div class="modal">
   <header>
-    <app-logo class="logo" [logo]="recipient.logo" [name]="name()" [seed]="recipient.id" />
+    <app-logo class="logo" [logo]="recipient.logo" [name]="name" [seed]="recipient.id" />
     <div class="titles">
-      <h2 id="payment-title">{{ name() }}</h2>
+      <h2 id="payment-title">{{ name }}</h2>
       <p>{{ fullName() }}</p>
     </div>
-    <button mat-icon-button type="button" [attr.aria-label]="lang.t('close')" (click)="close()">
+    <button mat-icon-button type="button" [attr.aria-label]="'close' | translate" (click)="close()">
       <span class="material-symbols-outlined">close</span>
     </button>
   </header>
 
-  @switch (store.status()) {
-    @case ('success') {
-      <section class="result" role="status">
-        <span class="material-symbols-outlined icon ok" aria-hidden="true">check_circle</span>
-        <h3>{{ lang.t('success') }}</h3>
-        <p class="big">{{ totalText() }}</p>
-        <dl>
-          <dt>{{ lang.t('recipient') }}</dt>
-          <dd>{{ name() }}</dd>
-          <dt>{{ lang.t('transactionId') }}</dt>
-          <dd class="mono">{{ store.transactionId() }}</dd>
-        </dl>
-        <button mat-flat-button type="button" (click)="close()">{{ lang.t('done') }}</button>
-      </section>
+  @switch (status) {
+    @case (PaymentStatus.Success) {
+      <app-payment-success
+        [recipientName]="name"
+        [total]="total()"
+        [transactionId]="store.transactionId()"
+        (done)="close()"
+      />
     }
-    @case ('error') {
-      <section class="result" role="alert">
-        <span class="material-symbols-outlined icon bad" aria-hidden="true">error</span>
-        <h3>{{ lang.t('error') }}</h3>
-        <div class="actions">
-          <button mat-flat-button type="button" (click)="store.retry()">{{ lang.t('retry') }}</button>
-          <button mat-button type="button" (click)="close()">{{ lang.t('close') }}</button>
-        </div>
-      </section>
+    @case (PaymentStatus.Error) {
+      <app-payment-error (retry)="store.retry()" (dismiss)="close()" />
     }
     @default {
-      @if (!hasFields) {
-        <p class="empty">{{ lang.t('noFields') }}</p>
+      @if (hasFields) {
+        <app-payment-form
+          [dynamicForm]="dynamicForm"
+          [recipient]="recipient"
+          [amount]="amount()"
+          [pending]="status === PaymentStatus.Pending"
+          (submitted)="pay()"
+        />
       } @else {
-        <form class="body" (submit)="$event.preventDefault(); pay()">
-          <app-dynamic-form [dyn]="dyn" [recipient]="recipient" />
-          <app-commission-summary [amountSum]="amount()" [recipient]="recipient" />
-          <button
-            mat-flat-button
-            class="pay"
-            type="submit"
-            [disabled]="!dyn.valid() || store.status() === 'pending'"
-          >
-            @if (store.status() === 'pending') {
-              <mat-spinner diameter="20" />
-            } @else {
-              {{ lang.t('pay') }}
-            }
-          </button>
-        </form>
+        <p class="empty">{{ 'noFields' | translate }}</p>
       }
     }
   }

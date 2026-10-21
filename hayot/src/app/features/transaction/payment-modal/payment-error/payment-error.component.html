@@ -1,0 +1,8 @@
+<section class="result" role="alert">
+  <span class="material-symbols-outlined icon" aria-hidden="true">error</span>
+  <h3>{{ 'error' | translate }}</h3>
+  <div class="actions">
+    <button mat-flat-button type="button" (click)="onRetry()">{{ 'retry' | translate }}</button>
+    <button mat-button type="button" (click)="onDismiss()">{{ 'close' | translate }}</button>
+  </div>
+</section>
