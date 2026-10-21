@@ -63,7 +63,7 @@ export class FirebaseClient implements TransactionApi {
   }
 
   history(): Observable<Transaction[]> {
-    return this.uid$.pipe(switchMap((uid) => this.watchTransactions(uid)));
+    return this.uid$.pipe(switchMap((uid) => this.getTransactions(uid)));
   }
 
   private currentUser$() {
@@ -74,7 +74,7 @@ export class FirebaseClient implements TransactionApi {
     return from(signInAnonymously(this.auth)).pipe(map((credential) => credential.user));
   }
 
-  private watchTransactions(uid: string): Observable<Transaction[]> {
+  private getTransactions(uid: string): Observable<Transaction[]> {
     return new Observable<Transaction[]>((subscriber) =>
       onSnapshot(
         this.userTransactionsQuery(uid),

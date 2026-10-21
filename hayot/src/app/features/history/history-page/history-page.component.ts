@@ -19,6 +19,6 @@ export class HistoryPageComponent {
   protected readonly failed = this.historyStore.failed;
 
   constructor() {
-    this.historyStore.watch();
+    this.historyStore.getHistory();
   }
 }
