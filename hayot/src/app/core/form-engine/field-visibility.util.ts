@@ -61,3 +61,14 @@ export function parentKeysOf(fields: readonly Field[]): string[] {
   const definedKeys = requiredKeys.filter((key): key is string => !!key);
   return [...new Set(definedKeys)];
 }
+
+export const visibleFieldsOf = (fields: readonly Field[], value: FormValue): Field[] =>
+  fields.filter((field) => isVisible(field, value));
+
+export function optionsByKeyOf(
+  fields: readonly Field[],
+  value: FormValue,
+): Record<string, FieldOption[]> {
+  const entries = fields.map((field) => [field.key, filterOptions(field, value)]);
+  return Object.fromEntries(entries);
+}

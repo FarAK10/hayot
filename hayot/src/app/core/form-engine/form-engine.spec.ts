@@ -4,7 +4,14 @@ import { FormControl } from '@angular/forms';
 import { AMOUNT_DIVISOR } from '../config/app.config.constants';
 import { Field } from '../models/catalog.models';
 import { RecipientId, Region, fieldOf, fieldsOf, recipientOf } from '../../testing/catalog.fixture';
-import { filterOptions, isVisible, dependentsOf, parentKeysOf } from './field-visibility.util';
+import {
+  filterOptions,
+  isVisible,
+  dependentsOf,
+  optionsByKeyOf,
+  parentKeysOf,
+  visibleFieldsOf,
+} from './field-visibility.util';
 import { FormBuilderService } from './form-builder.service';
 import { DynamicForm } from './utils/dynamic-control.util';
 import { buildValidators } from './validators.factory';
@@ -119,15 +126,10 @@ describe('FormBuilderService (Electricity)', () => {
   }
 
   const visibleKeys = (form: DynamicForm) =>
-    electricityFields
-      .filter((field) => isVisible(field, form.getRawValue()))
-      .map((field) => field.key);
+    visibleFieldsOf(electricityFields, form.getRawValue()).map((field) => field.key);
 
   const optionsOf = (form: DynamicForm, key: string) =>
-    filterOptions(
-      electricityFields.find((field) => field.key === key)!,
-      form.getRawValue(),
-    );
+    optionsByKeyOf(electricityFields, form.getRawValue())[key];
 
   it('shows only REGION, customer_code and summa initially, in ord order', () => {
     expect(visibleKeys(build())).toEqual(INITIAL_FIELD_KEYS);

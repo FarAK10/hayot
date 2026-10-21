@@ -2,8 +2,8 @@ import { NgComponentOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import {
   FormValue,
-  filterOptions,
-  isVisible,
+  optionsByKeyOf,
+  visibleFieldsOf,
 } from '../../../../../core/form-engine/field-visibility.util';
 import { DynamicForm } from '../../../../../core/form-engine/utils/dynamic-control.util';
 import { Field, Recipient } from '../../../../../core/models/catalog.models';
@@ -26,11 +26,7 @@ export class DynamicFormComponent {
 
   protected readonly componentFor = componentFor;
   protected readonly visibleFields = computed(() =>
-    this.fields().filter((field) => isVisible(field, this.rawValue())),
+    visibleFieldsOf(this.fields(), this.rawValue()),
   );
-  protected readonly optionsByKey = computed(() =>
-    Object.fromEntries(
-      this.fields().map((field) => [field.key, filterOptions(field, this.rawValue())]),
-    ),
-  );
+  protected readonly optionsByKey = computed(() => optionsByKeyOf(this.fields(), this.rawValue()));
 }
