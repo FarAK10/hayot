@@ -11,7 +11,7 @@
       [formControl]="searchControl"
       (keydown.escape)="clearSearch()"
     />
-    @if (searchInput()) {
+    @if (searchText()) {
       <button
         mat-icon-button
         type="button"

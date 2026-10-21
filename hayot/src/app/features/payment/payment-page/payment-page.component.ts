@@ -34,7 +34,7 @@ export class PaymentPageComponent {
       const urlQuery = this.urlQuery();
       untracked(() => {
         if (urlQuery !== this.catalogStore.query()) {
-          this.catalogStore.setSearchImmediate(urlQuery);
+          this.catalogStore.setSearchQuery(urlQuery);
         }
       });
     });

@@ -17,7 +17,6 @@ import { SearchGroup, catalogGroups } from '../../utils/search.util';
 
 interface CatalogState extends CatalogResponse {
   status: LoadStatus;
-  input: string;
   query: string;
 }
 
@@ -28,7 +27,6 @@ export const CatalogStore = signalStore(
     recipients: [],
     fields: [],
     status: LoadStatus.Idle,
-    input: '',
     query: '',
   }),
   withComputed(({ categories, recipients, fields, status, query }) => {
@@ -66,17 +64,8 @@ export const CatalogStore = signalStore(
         ),
       ),
     ),
-    setSearchInput(input: string): void {
-      patchState(store, { input });
-    },
     setSearchQuery(query: string): void {
       patchState(store, { query });
-    },
-    setSearchImmediate(value: string): void {
-      patchState(store, { input: value, query: value });
-    },
-    clearSearch(): void {
-      patchState(store, { input: '', query: '' });
     },
     recipientsOf: (categoryId: number): Recipient[] =>
       store.recipientsByCategory().get(categoryId) ?? [],

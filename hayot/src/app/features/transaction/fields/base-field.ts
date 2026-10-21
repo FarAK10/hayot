@@ -1,4 +1,4 @@
-import { Directive, Signal, computed, inject, input } from '@angular/core';
+import { Directive, computed, inject, input } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Field, FieldOption, Recipient } from '../../../core/models/catalog.models';
 import { LanguageStore } from '../../../core/stores/language/language.store';
@@ -10,7 +10,7 @@ export abstract class BaseField {
   readonly field = input.required<Field>();
   readonly control = input.required<FormControl<string | number | null>>();
   readonly recipient = input.required<Recipient>();
-  readonly options = input.required<Signal<FieldOption[]>>();
+  readonly options = input.required<FieldOption[]>();
 
   protected readonly languageStore = inject(LanguageStore);
   protected readonly label = computed(() => this.languageStore.localize(this.field().name));

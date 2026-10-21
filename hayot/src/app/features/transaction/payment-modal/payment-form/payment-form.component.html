@@ -2,9 +2,14 @@
 @let recipient = this.recipient();
 @let pending = this.pending();
 <form (submit)="$event.preventDefault(); submit()">
-  <app-dynamic-form [dynamicForm]="dynamicForm" [recipient]="recipient" />
+  <app-dynamic-form
+    [dynamicForm]="dynamicForm"
+    [fields]="fields()"
+    [rawValue]="rawValue()"
+    [recipient]="recipient"
+  />
   <app-commission-summary [amountSum]="amount()" [recipient]="recipient" />
-  <button mat-flat-button class="pay" type="submit" [disabled]="!dynamicForm.valid() || pending">
+  <button mat-flat-button class="pay" type="submit" [disabled]="!valid() || pending">
     @if (pending) {
       <mat-spinner [diameter]="spinnerDiameter" />
     } @else {

@@ -28,6 +28,9 @@
       @if (hasFields) {
         <app-payment-form
           [dynamicForm]="dynamicForm"
+          [fields]="fields"
+          [rawValue]="rawValue()"
+          [valid]="valid()"
           [recipient]="recipient"
           [amount]="amount()"
           [pending]="status === PaymentStatus.Pending"

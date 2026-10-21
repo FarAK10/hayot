@@ -1,18 +1,9 @@
-import { DestroyRef, Injectable, Signal, computed, inject, signal } from '@angular/core';
+import { DestroyRef, Injectable, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormRecord } from '@angular/forms';
-import { Field, FieldOption, Recipient } from '../models/catalog.models';
-import { FormValue, isVisible } from './field-visibility.util';
+import { Field, Recipient } from '../models/catalog.models';
 import { FormContext, refreshDependents } from './utils/dependents.util';
-import { DynamicControl, buildControls } from './utils/dynamic-control.util';
-import { createOptionsLookup } from './utils/options-lookup.util';
-
-export interface DynamicForm {
-  form: FormRecord<DynamicControl>;
-  visibleFields: Signal<Field[]>;
-  optionsFor(key: string): Signal<FieldOption[]>;
-  valid: Signal<boolean>;
-}
+import { DynamicControl, DynamicForm, buildControls } from './utils/dynamic-control.util';
 
 @Injectable({ providedIn: 'root' })
 export class FormBuilderService {
@@ -22,28 +13,9 @@ export class FormBuilderService {
     destroyRef = inject(DestroyRef),
   ): DynamicForm {
     const controls = buildControls(fields, recipient);
-    const form = new FormRecord<DynamicControl>(controls);
-    const { rawValue, valid } = this.trackState(form, destroyRef);
-    this.linkDependents({ form, controls, fields }, destroyRef);
-
-    return {
-      form,
-      valid,
-      visibleFields: computed(() => fields.filter((field) => isVisible(field, rawValue()))),
-      optionsFor: createOptionsLookup(fields, rawValue),
-    };
-  }
-
-  private trackState(form: FormRecord<DynamicControl>, destroyRef: DestroyRef) {
-    const rawValue = signal<FormValue>(form.getRawValue());
-    const valid = signal(form.valid);
-
-    form.valueChanges
-      .pipe(takeUntilDestroyed(destroyRef))
-      .subscribe(() => rawValue.set(form.getRawValue()));
-    form.statusChanges.pipe(takeUntilDestroyed(destroyRef)).subscribe(() => valid.set(form.valid));
-
-    return { rawValue, valid };
+    const dynamicForm = new FormRecord<DynamicControl>(controls);
+    this.linkDependents({ form: dynamicForm, controls, fields }, destroyRef);
+    return dynamicForm;
   }
 
   private linkDependents(context: FormContext, destroyRef: DestroyRef): void {

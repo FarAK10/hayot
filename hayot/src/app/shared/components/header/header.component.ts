@@ -1,12 +1,12 @@
 import { UpperCasePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, effect, inject, untracked } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ChangeDetectionStrategy, Component, effect, inject } from '@angular/core';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatIconButton } from '@angular/material/button';
 import { MatButtonToggle, MatButtonToggleGroup } from '@angular/material/button-toggle';
 import { MatToolbar } from '@angular/material/toolbar';
 import { Router, RouterLink } from '@angular/router';
-import { debounceTime, distinctUntilChanged, tap } from 'rxjs';
+import { debounceTime, distinctUntilChanged } from 'rxjs';
 import { SEARCH_DEBOUNCE, SEARCH_QUERY_PARAM } from '../../../core/config/app.config.constants';
 import { LANGS, Lang } from '../../../core/models/catalog.models';
 import { LanguageStore } from '../../../core/stores/language/language.store';
@@ -33,50 +33,42 @@ export class HeaderComponent {
   private readonly languageStore = inject(LanguageStore);
   private readonly catalogStore = inject(CatalogStore);
   protected readonly currentLang = this.languageStore.lang;
-  protected readonly searchInput = this.catalogStore.input;
   private readonly router = inject(Router);
   protected readonly langs: readonly Lang[] = LANGS;
   protected readonly searchControl = new FormControl('', { nonNullable: true });
+  protected readonly searchText = toSignal(this.searchControl.valueChanges, { initialValue: '' });
+  private appliedQuery = '';
 
   constructor() {
     this.listenToTyping();
-    this.mirrorStoreInput();
-    this.syncUrlOnClear();
-  }
-
-  private syncUrlOnClear(): void {
-    effect(() => {
-      if (!this.catalogStore.query()) {
-        untracked(() => this.syncUrl(''));
-      }
-    });
+    this.mirrorExternalQuery();
   }
 
   private listenToTyping(): void {
     this.searchControl.valueChanges
-      .pipe(
-        tap((value) => this.catalogStore.setSearchInput(value)),
-        debounceTime(SEARCH_DEBOUNCE),
-        distinctUntilChanged(),
-        takeUntilDestroyed(),
-      )
-      .subscribe((value) => {
-        this.catalogStore.setSearchQuery(value);
-        this.syncUrl(value.trim());
-      });
+      .pipe(debounceTime(SEARCH_DEBOUNCE), distinctUntilChanged(), takeUntilDestroyed())
+      .subscribe((text) => this.applyQuery(text));
   }
 
-  private mirrorStoreInput(): void {
+  private mirrorExternalQuery(): void {
     effect(() => {
-      const input = this.catalogStore.input();
-      if (input !== this.searchControl.value) {
-        this.searchControl.setValue(input, { emitEvent: false });
+      const query = this.catalogStore.query();
+      if (query !== this.appliedQuery) {
+        this.appliedQuery = query;
+        this.searchControl.setValue(query);
       }
     });
   }
 
+  private applyQuery(query: string): void {
+    this.appliedQuery = query;
+    this.catalogStore.setSearchQuery(query);
+    this.syncUrl(query.trim());
+  }
+
   protected clearSearch(): void {
-    this.catalogStore.clearSearch();
+    this.searchControl.setValue('');
+    this.applyQuery('');
   }
 
   protected setLang(lang: Lang): void {

@@ -54,7 +54,7 @@ export class PaymentModalComponent implements OnInit {
   private readonly destroyRef = inject(DestroyRef);
 
   protected readonly recipient = this.catalogStore.recipient(this.dialogData.recipientId)!;
-  private readonly fields = this.catalogStore.fieldsFor(this.recipient.id);
+  protected readonly fields = this.catalogStore.fieldsFor(this.recipient.id);
   protected readonly hasFields = this.fields.length > 0;
   protected readonly dynamicForm = this.formBuilder.create(
     this.fields,
@@ -62,10 +62,18 @@ export class PaymentModalComponent implements OnInit {
     this.destroyRef,
   );
 
+  protected readonly rawValue = toSignal(
+    this.dynamicForm.valueChanges.pipe(map(() => this.dynamicForm.getRawValue())),
+    { initialValue: this.dynamicForm.getRawValue() },
+  );
+  protected readonly valid = toSignal(
+    this.dynamicForm.statusChanges.pipe(map(() => this.dynamicForm.valid)),
+    { initialValue: this.dynamicForm.valid },
+  );
+
   private readonly amountKey = this.fields.find((field) => field.type === FieldType.Amount)?.key;
-  protected readonly amount = toSignal(
-    this.dynamicForm.form.valueChanges.pipe(map(() => this.readAmount())),
-    { initialValue: 0 },
+  protected readonly amount = computed(() =>
+    this.amountKey ? Number(this.rawValue()[this.amountKey] ?? 0) : 0,
   );
 
   protected readonly name = computed(() => this.languageStore.localize(this.recipient.name));
@@ -80,24 +88,12 @@ export class PaymentModalComponent implements OnInit {
 
   protected pay(): void {
     this.paymentStore.pay(
-      buildPayload(
-        this.recipient,
-        this.fields,
-        this.dynamicForm.form.value,
-        this.languageStore.lang(),
-      ),
+      buildPayload(this.recipient, this.fields, this.dynamicForm.value, this.languageStore.lang()),
     );
   }
 
   protected retry(): void {
     this.paymentStore.retry();
-  }
-
-  private readAmount(): number {
-    if (!this.amountKey) {
-      return 0;
-    }
-    return Number(this.dynamicForm.form.value[this.amountKey] ?? 0);
   }
 
   protected close(): void {
