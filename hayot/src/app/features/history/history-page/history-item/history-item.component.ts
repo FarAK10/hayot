@@ -39,13 +39,9 @@ export class HistoryItemComponent {
     const lang = this.languageStore.lang();
     const sumLabel = this.languageStore.t('sum');
 
-    return keyValue.map((pair) =>
-      toDetailRow(
-        pair,
-        fields.find((field) => field.key === pair.key),
-        lang,
-        sumLabel,
-      ),
-    );
+    return keyValue.map((pair) => {
+      const field = fields.find((candidate) => candidate.key === pair.key);
+      return toDetailRow(pair, field, lang, sumLabel);
+    });
   });
 }

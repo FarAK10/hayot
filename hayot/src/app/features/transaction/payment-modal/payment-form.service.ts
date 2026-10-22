@@ -40,7 +40,8 @@ export class PaymentFormService {
     },
   );
 
-  private readonly amountKey = this.fields.find((field) => field.type === FieldType.Amount)?.key;
+  private readonly amountField = this.fields.find((field) => field.type === FieldType.Amount);
+  private readonly amountKey = this.amountField?.key;
   readonly amount = computed(() =>
     this.amountKey ? Number(this.rawValue()[this.amountKey] ?? 0) : 0,
   );
