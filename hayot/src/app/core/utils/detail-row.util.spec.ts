@@ -22,7 +22,7 @@ describe('toDetailRow', () => {
 
   it('shows the option name instead of a select value, in the active language', () => {
     const pair: KeyValue = { key: 'REGION', value: Region.TashkentCity };
-    const option = regionField.values.find((candidate) => candidate.value === pair.value)!;
+    const option = regionField.options.find((candidate) => candidate.value === pair.value)!;
 
     expect(toDetailRow(pair, regionField, 'uz', SUM_LABEL).value).toBe(localize(option.name, 'uz'));
     expect(toDetailRow(pair, regionField, 'ru', SUM_LABEL).label).toBe(

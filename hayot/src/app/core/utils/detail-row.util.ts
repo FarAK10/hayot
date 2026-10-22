@@ -15,7 +15,7 @@ function displayValue(value: string, field: Field, lang: Lang, sumLabel: string)
     return `${formatTiyin(Number(value))} ${sumLabel}`;
   }
   if (isSelectField(field)) {
-    const option = field.values.find((candidate) => candidate.value === value);
+    const option = field.options.find((candidate) => candidate.value === value);
     return option ? localize(option.name, lang) : value;
   }
   const maskTokens = parseMask(field.mask);

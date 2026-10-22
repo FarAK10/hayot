@@ -67,7 +67,7 @@ export interface AmountField extends FieldBase {
 
 export interface SelectField extends FieldBase {
   type: FieldType.Select;
-  values: FieldOption[];
+  options: FieldOption[];
 }
 
 export interface TextField extends FieldBase {
@@ -84,8 +84,16 @@ export const isAmountField = (field: Field): field is AmountField =>
 export const isSelectField = (field: Field): field is SelectField =>
   field.type === FieldType.Select;
 
-export interface CatalogResponse {
+export type RawSelectField = Omit<SelectField, 'options'> & { values?: FieldOption[] };
+
+export type RawField = AmountField | RawSelectField | TextField;
+
+export interface Catalog {
   categories: Category[];
   recipients: Recipient[];
   fields: Field[];
+}
+
+export interface CatalogResponse extends Omit<Catalog, 'fields'> {
+  fields: RawField[];
 }

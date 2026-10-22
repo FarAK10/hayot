@@ -49,7 +49,7 @@ describe('CatalogStore', () => {
       .getFieldsFor(RecipientId.Electricity)
       .filter(isSelectField)
       .find((field) => field.key === 'soato')!;
-    const ords = soato.values.map((value) => value.ord);
+    const ords = soato.options.map((value) => value.ord);
 
     expect(ords).toEqual([...ords].sort((first, second) => first - second));
   });

@@ -126,6 +126,101 @@
         "ru": "ГУП \"TOSHISSIQQUVVATI\"",
         "en": "ГУП \"TOSHISSIQQUVVATI\""
       }
+    },
+    {
+      "id": 23304,
+      "logo": "23304.png",
+      "commission": 1,
+      "minAmount": 50000,
+      "maxAmount": 150000000,
+      "ord": 3,
+      "categoryId": 1151,
+      "name": {
+        "ru": "Uzmobile",
+        "en": "Uzmobile",
+        "uz": "Uzmobile"
+      },
+      "fullName": {
+        "ru": "Uzmobile (demo data)",
+        "en": "Uzmobile (demo data)",
+        "uz": "Uzmobile (demo data)"
+      }
+    },
+    {
+      "id": 23305,
+      "logo": "23305.png",
+      "commission": 1,
+      "minAmount": 50000,
+      "maxAmount": 150000000,
+      "ord": 4,
+      "categoryId": 1151,
+      "name": {
+        "ru": "Mobiuz",
+        "en": "Mobiuz",
+        "uz": "Mobiuz"
+      },
+      "fullName": {
+        "ru": "Mobiuz (demo data)",
+        "en": "Mobiuz (demo data)",
+        "uz": "Mobiuz (demo data)"
+      }
+    },
+    {
+      "id": 23306,
+      "logo": "23306.png",
+      "commission": 1,
+      "minAmount": 50000,
+      "maxAmount": 150000000,
+      "ord": 5,
+      "categoryId": 1151,
+      "name": {
+        "ru": "Humans",
+        "en": "Humans",
+        "uz": "Humans"
+      },
+      "fullName": {
+        "ru": "Humans (demo data)",
+        "en": "Humans (demo data)",
+        "uz": "Humans (demo data)"
+      }
+    },
+    {
+      "id": 23307,
+      "logo": "23307.png",
+      "commission": 1,
+      "minAmount": 50000,
+      "maxAmount": 150000000,
+      "ord": 6,
+      "categoryId": 1151,
+      "name": {
+        "ru": "Perfectum Mobile",
+        "en": "Perfectum Mobile",
+        "uz": "Perfectum Mobile"
+      },
+      "fullName": {
+        "ru": "Perfectum Mobile (demo data)",
+        "en": "Perfectum Mobile (demo data)",
+        "uz": "Perfectum Mobile (demo data)"
+      }
+    },
+    {
+      "id": 23308,
+      "logo": "23308.png",
+      "commission": 1,
+      "minAmount": 50000,
+      "maxAmount": 150000000,
+      "ord": 7,
+      "categoryId": 1151,
+      "name": {
+        "ru": "Uztelecom",
+        "en": "Uztelecom",
+        "uz": "Uztelecom"
+      },
+      "fullName": {
+        "ru": "Uztelecom (demo data)",
+        "en": "Uztelecom (demo data)",
+        "uz": "Uztelecom (demo data)"
+      }
     }
   ],
   "fields": [
@@ -986,6 +1081,266 @@
         "ru": "Услуга",
         "en": "Услуга",
         "uz": "Услуга"
+      }
+    },
+    {
+      "id": 23408,
+      "key": "summa",
+      "type": "AMOUNT",
+      "validation": null,
+      "placeholder": null,
+      "mask": null,
+      "lengthMin": 0,
+      "lengthMax": 12,
+      "requireField": null,
+      "required": true,
+      "ord": 2,
+      "recipientId": 23304,
+      "filterBy": null,
+      "values": [],
+      "name": {
+        "en": "Amount",
+        "ru": "Сумма",
+        "uz": "Summa"
+      },
+      "description": {
+        "en": "Amount",
+        "uz": "Summa",
+        "ru": "Сумма"
+      }
+    },
+    {
+      "id": 23409,
+      "key": "phone_number",
+      "type": "PHONE_NUMBER",
+      "validation": "(95|99)\\d{7}",
+      "placeholder": "Введите номер телефона",
+      "mask": "998\\((\\d{2})\\)(\\d{3})-(\\d{2})-(\\d{2})",
+      "lengthMin": 7,
+      "lengthMax": 7,
+      "requireField": null,
+      "required": true,
+      "ord": 1,
+      "recipientId": 23304,
+      "filterBy": null,
+      "values": [],
+      "name": {
+        "ru": "Номер телефона",
+        "en": "Phone number",
+        "uz": "Telefon raqami"
+      },
+      "description": {
+        "uz": "Telefon raqami",
+        "en": "Phone number",
+        "ru": "Номер телефона"
+      }
+    },
+    {
+      "id": 23410,
+      "key": "summa",
+      "type": "AMOUNT",
+      "validation": null,
+      "placeholder": null,
+      "mask": null,
+      "lengthMin": 0,
+      "lengthMax": 12,
+      "requireField": null,
+      "required": true,
+      "ord": 2,
+      "recipientId": 23305,
+      "filterBy": null,
+      "values": [],
+      "name": {
+        "en": "Amount",
+        "ru": "Сумма",
+        "uz": "Summa"
+      },
+      "description": {
+        "en": "Amount",
+        "uz": "Summa",
+        "ru": "Сумма"
+      }
+    },
+    {
+      "id": 23411,
+      "key": "phone_number",
+      "type": "PHONE_NUMBER",
+      "validation": "(88|97)\\d{7}",
+      "placeholder": "Введите номер телефона",
+      "mask": "998\\((\\d{2})\\)(\\d{3})-(\\d{2})-(\\d{2})",
+      "lengthMin": 7,
+      "lengthMax": 7,
+      "requireField": null,
+      "required": true,
+      "ord": 1,
+      "recipientId": 23305,
+      "filterBy": null,
+      "values": [],
+      "name": {
+        "ru": "Номер телефона",
+        "en": "Phone number",
+        "uz": "Telefon raqami"
+      },
+      "description": {
+        "uz": "Telefon raqami",
+        "en": "Phone number",
+        "ru": "Номер телефона"
+      }
+    },
+    {
+      "id": 23412,
+      "key": "summa",
+      "type": "AMOUNT",
+      "validation": null,
+      "placeholder": null,
+      "mask": null,
+      "lengthMin": 0,
+      "lengthMax": 12,
+      "requireField": null,
+      "required": true,
+      "ord": 2,
+      "recipientId": 23306,
+      "filterBy": null,
+      "values": [],
+      "name": {
+        "en": "Amount",
+        "ru": "Сумма",
+        "uz": "Summa"
+      },
+      "description": {
+        "en": "Amount",
+        "uz": "Summa",
+        "ru": "Сумма"
+      }
+    },
+    {
+      "id": 23413,
+      "key": "phone_number",
+      "type": "PHONE_NUMBER",
+      "validation": "33\\d{7}",
+      "placeholder": "Введите номер телефона",
+      "mask": "998\\((\\d{2})\\)(\\d{3})-(\\d{2})-(\\d{2})",
+      "lengthMin": 7,
+      "lengthMax": 7,
+      "requireField": null,
+      "required": true,
+      "ord": 1,
+      "recipientId": 23306,
+      "filterBy": null,
+      "values": [],
+      "name": {
+        "ru": "Номер телефона",
+        "en": "Phone number",
+        "uz": "Telefon raqami"
+      },
+      "description": {
+        "uz": "Telefon raqami",
+        "en": "Phone number",
+        "ru": "Номер телефона"
+      }
+    },
+    {
+      "id": 23414,
+      "key": "summa",
+      "type": "AMOUNT",
+      "validation": null,
+      "placeholder": null,
+      "mask": null,
+      "lengthMin": 0,
+      "lengthMax": 12,
+      "requireField": null,
+      "required": true,
+      "ord": 2,
+      "recipientId": 23307,
+      "filterBy": null,
+      "values": [],
+      "name": {
+        "en": "Amount",
+        "ru": "Сумма",
+        "uz": "Summa"
+      },
+      "description": {
+        "en": "Amount",
+        "uz": "Summa",
+        "ru": "Сумма"
+      }
+    },
+    {
+      "id": 23415,
+      "key": "phone_number",
+      "type": "PHONE_NUMBER",
+      "validation": "98\\d{7}",
+      "placeholder": "Введите номер телефона",
+      "mask": "998\\((\\d{2})\\)(\\d{3})-(\\d{2})-(\\d{2})",
+      "lengthMin": 7,
+      "lengthMax": 7,
+      "requireField": null,
+      "required": true,
+      "ord": 1,
+      "recipientId": 23307,
+      "filterBy": null,
+      "values": [],
+      "name": {
+        "ru": "Номер телефона",
+        "en": "Phone number",
+        "uz": "Telefon raqami"
+      },
+      "description": {
+        "uz": "Telefon raqami",
+        "en": "Phone number",
+        "ru": "Номер телефона"
+      }
+    },
+    {
+      "id": 23416,
+      "key": "summa",
+      "type": "AMOUNT",
+      "validation": null,
+      "placeholder": null,
+      "mask": null,
+      "lengthMin": 0,
+      "lengthMax": 12,
+      "requireField": null,
+      "required": true,
+      "ord": 2,
+      "recipientId": 23308,
+      "filterBy": null,
+      "values": [],
+      "name": {
+        "en": "Amount",
+        "ru": "Сумма",
+        "uz": "Summa"
+      },
+      "description": {
+        "en": "Amount",
+        "uz": "Summa",
+        "ru": "Сумма"
+      }
+    },
+    {
+      "id": 23417,
+      "key": "phone_number",
+      "type": "PHONE_NUMBER",
+      "validation": "(71|78)\\d{7}",
+      "placeholder": "Введите номер телефона",
+      "mask": "998\\((\\d{2})\\)(\\d{3})-(\\d{2})-(\\d{2})",
+      "lengthMin": 7,
+      "lengthMax": 7,
+      "requireField": null,
+      "required": true,
+      "ord": 1,
+      "recipientId": 23308,
+      "filterBy": null,
+      "values": [],
+      "name": {
+        "ru": "Номер телефона",
+        "en": "Phone number",
+        "uz": "Telefon raqami"
+      },
+      "description": {
+        "uz": "Telefon raqami",
+        "en": "Phone number",
+        "ru": "Номер телефона"
       }
     }
   ]

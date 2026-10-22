@@ -5,6 +5,7 @@ import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { EMPTY, catchError, pipe, switchMap, tap } from 'rxjs';
 import { CATALOG_URL } from '../../config/app.config.constants';
 import {
+  Catalog,
   CatalogResponse,
   Category,
   Field,
@@ -15,7 +16,7 @@ import { isCatalogPending, normalizeCatalog } from '../../utils/catalog.util';
 import { groupBy, indexBy } from '../../utils/collection.util';
 import { SearchGroup, catalogGroups } from '../../utils/search.util';
 
-interface CatalogState extends CatalogResponse {
+interface CatalogState extends Catalog {
   status: LoadStatus;
   query: string;
 }

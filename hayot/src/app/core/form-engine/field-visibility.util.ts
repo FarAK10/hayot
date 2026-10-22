@@ -26,7 +26,7 @@ export function filterOptions(field: Field, value: FormValue): FieldOption[] {
   if (!isSelectField(field)) {
     return [];
   }
-  const options = field.values;
+  const options = field.options;
   const dependsOnParent = !!field.requireField;
   const parentText = String(parentValue(field, value) ?? '');
 
