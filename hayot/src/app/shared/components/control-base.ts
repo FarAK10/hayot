@@ -74,7 +74,6 @@ export abstract class ControlBase<T> implements ControlValueAccessor, OnInit, Af
     this.onTouched();
   }
 
-  /** Material only refreshes a field's error state itself when the inner input has its own NgControl. */
   protected abstract updateFieldErrorState(): void;
 
   private syncErrorState(control: AbstractControl): void {

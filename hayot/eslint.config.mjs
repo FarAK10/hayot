@@ -17,7 +17,6 @@ export default defineConfig(
     ],
     processor: angular.processInlineTemplates,
     rules: {
-      // Always use braces: `if (x) { ... }`, never a bare statement.
       curly: ['error', 'all'],
       eqeqeq: ['error', 'always'],
       'no-console': ['error', { allow: ['warn', 'error'] }],
@@ -35,7 +34,6 @@ export default defineConfig(
     },
   },
   {
-    // The Angular CLI / test tooling files, not app code.
     files: ['**/*.spec.ts'],
     rules: {
       '@typescript-eslint/no-non-null-assertion': 'off',
@@ -48,7 +46,6 @@ export default defineConfig(
   },
   prettier,
   {
-    // eslint-config-prettier turns `curly` off, so it is switched back on after it.
     files: ['**/*.ts'],
     rules: { curly: ['error', 'all'] },
   },

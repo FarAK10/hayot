@@ -7,11 +7,11 @@ import { MatButtonToggle, MatButtonToggleGroup } from '@angular/material/button-
 import { MatToolbar } from '@angular/material/toolbar';
 import { Router, RouterLink } from '@angular/router';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
-import { SEARCH_DEBOUNCE, SEARCH_QUERY_PARAM } from '../../../core/config/app.config.constants';
-import { LANGS, Lang } from '../../../core/models/catalog.models';
-import { LanguageStore } from '../../../core/stores/language/language.store';
-import { CatalogStore } from '../../../core/stores/catalog/catalog.store';
-import { TranslatePipe } from '../../pipes/translate.pipe';
+import { SEARCH_DEBOUNCE, SEARCH_QUERY_PARAM } from '../../core/config/app.config.constants';
+import { LANGS, Lang } from '../../core/models/catalog.models';
+import { LanguageStore } from '../../core/stores/language/language.store';
+import { CatalogStore } from '../../core/stores/catalog/catalog.store';
+import { TranslatePipe } from '../../shared/pipes/translate.pipe';
 
 @Component({
   selector: 'app-header',
