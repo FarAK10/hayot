@@ -8,7 +8,7 @@ import { LogoComponent } from '../../../shared/components/logo/logo.component';
 import { TranslatePipe } from '../../../shared/pipes/translate.pipe';
 import { PaymentErrorComponent } from './payment-error/payment-error.component';
 import { PaymentFormComponent } from './payment-form/payment-form.component';
-import { PaymentFormService } from './payment-form.service';
+import { PaymentFormService } from './payment-form-service/payment-form.service';
 import { PaymentSuccessComponent } from './payment-success/payment-success.component';
 
 @Component({

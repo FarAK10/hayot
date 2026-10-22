@@ -2,17 +2,20 @@ import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { AMOUNT_DIVISOR, CATALOG_URL } from '../../../core/config/app.config.constants';
-import { optionsByKeyOf, visibleFieldsOf } from '../../../core/form-engine/field-visibility.util';
-import { DynamicForm } from '../../../core/form-engine/utils/dynamic-control.util';
-import { CatalogStore } from '../../../core/stores/catalog/catalog.store';
+import { AMOUNT_DIVISOR, CATALOG_URL } from '../../../../core/config/app.config.constants';
+import {
+  optionsByKeyOf,
+  visibleFieldsOf,
+} from '../../../../core/form-engine/field-visibility.util';
+import { DynamicForm } from '../../../../core/form-engine/utils/dynamic-control.util';
+import { CatalogStore } from '../../../../core/stores/catalog/catalog.store';
 import {
   RAW_CATALOG,
   RecipientId,
   Region,
   fieldsOf,
   recipientOf,
-} from '../../../testing/catalog.fixture';
+} from '../../../../testing/catalog.fixture';
 import { PaymentFormService } from './payment-form.service';
 
 const SOATO_OPTIONS_COUNT = { [Region.TashkentRegion]: 22, [Region.TashkentCity]: 11 };
