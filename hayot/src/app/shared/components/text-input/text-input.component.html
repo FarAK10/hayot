@@ -1,0 +1,18 @@
+@let error = this.error();
+<mat-form-field appearance="outline" subscriptSizing="dynamic">
+  <mat-label>{{ label() }}</mat-label>
+  <input
+    #field
+    matInput
+    [value]="display()"
+    [disabled]="disabled()"
+    [errorStateMatcher]="errorStateMatcher"
+    [attr.inputmode]="inputMode()"
+    [placeholder]="placeholder()"
+    (input)="onInput(field)"
+    (blur)="onBlur()"
+  />
+  @if (error) {
+    <mat-error>{{ error }}</mat-error>
+  }
+</mat-form-field>

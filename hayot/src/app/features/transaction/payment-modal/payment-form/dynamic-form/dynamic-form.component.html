@@ -1,5 +1,35 @@
-@for (rendered of renderedFields(); track rendered.key) {
+@for (field of renderedFields(); track field.key) {
   <div class="row">
-    <ng-container *ngComponentOutlet="rendered.component; inputs: rendered.inputs" />
+    @switch (field.controlType) {
+      @case (ControlType.Amount) {
+        <app-amount-input
+          [formControl]="field.control"
+          [label]="field.label"
+          [error]="field.error"
+          [hint]="field.hint"
+          [suffix]="field.suffix"
+        />
+      }
+      @case (ControlType.Select) {
+        <app-select-input
+          [formControl]="field.control"
+          [label]="field.label"
+          [error]="field.error"
+          [placeholder]="field.placeholder"
+          [options]="field.options"
+        />
+      }
+      @default {
+        <app-text-input
+          [formControl]="field.control"
+          [label]="field.label"
+          [error]="field.error"
+          [placeholder]="field.placeholder"
+          [mask]="field.tokens"
+          [digitsOnly]="field.digitsOnly"
+          [inputMode]="field.inputMode"
+        />
+      }
+    }
   </div>
 }

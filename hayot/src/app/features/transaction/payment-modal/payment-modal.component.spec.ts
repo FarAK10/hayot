@@ -116,6 +116,6 @@ describe('PaymentModalComponent', () => {
     const fixture = await open(RecipientId.Electricity);
     const element = fixture.nativeElement as HTMLElement;
 
-    expect(element.querySelectorAll('app-select-field')).toHaveLength(initialSelectFields);
+    expect(element.querySelectorAll('app-select-input')).toHaveLength(initialSelectFields);
   });
 });
