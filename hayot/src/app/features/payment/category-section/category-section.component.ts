@@ -20,7 +20,7 @@ export class CategorySectionComponent {
   readonly query = input('');
 
   protected readonly previewCount = PREVIEW_COUNT;
-  protected readonly shown = computed(() =>
+  protected readonly showRecipients = computed(() =>
     this.preview() ? this.recipients().slice(0, PREVIEW_COUNT) : this.recipients(),
   );
 }

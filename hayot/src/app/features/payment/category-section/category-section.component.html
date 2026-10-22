@@ -9,7 +9,7 @@
     }
   </h2>
   <div class="cards">
-    @for (recipient of shown(); track recipient.id) {
+    @for (recipient of showRecipients(); track recipient.id) {
       <app-recipient-card [recipient]="recipient" [query]="query()" />
     }
   </div>
