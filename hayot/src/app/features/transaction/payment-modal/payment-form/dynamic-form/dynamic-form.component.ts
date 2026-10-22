@@ -5,38 +5,14 @@ import {
   optionsByKeyOf,
   visibleFieldsOf,
 } from '../../../../../core/form-engine/field-visibility.util';
-import {
-  DynamicControl,
-  DynamicForm,
-} from '../../../../../core/form-engine/utils/dynamic-control.util';
-import {
-  Field,
-  FieldOption,
-  Recipient,
-  isAmountField,
-  isSelectField,
-} from '../../../../../core/models/catalog.models';
+import { DynamicForm } from '../../../../../core/form-engine/utils/dynamic-control.util';
+import { Field, Recipient } from '../../../../../core/models/catalog.models';
 import { LanguageStore } from '../../../../../core/stores/language/language.store';
-import { fieldErrorText } from '../../../../../core/utils/field-error.util';
-import {
-  amountHintOf,
-  inputModeOf,
-  isDigitsOnly,
-  placeholderOf,
-} from '../../../../../core/utils/field-view.util';
-import { MaskToken, parseMask } from '../../../../../core/utils/mask.util';
 import { AmountInputComponent } from '../../../../../shared/components/amount-input/amount-input.component';
 import { SelectInputComponent } from '../../../../../shared/components/select-input/select-input.component';
 import { TextInputComponent } from '../../../../../shared/components/text-input/text-input.component';
-import { SelectOption } from '../../../../../shared/models/select-option.model';
-import { RenderedField, ControlType } from './dynamic-form.models';
-
-interface RenderContext {
-  controls: Record<string, DynamicControl>;
-  recipient: Recipient;
-  optionsByKey: Record<string, FieldOption[]>;
-  tokensByKey: Map<string, MaskToken[] | null>;
-}
+import { ControlType, RenderedField } from './dynamic-form.models';
+import { RenderContext, renderField, tokensByKeyOf } from './dynamic-form.util';
 
 @Component({
   selector: 'app-dynamic-form',
@@ -58,13 +34,7 @@ export class DynamicFormComponent {
 
   private readonly visibleFields = computed(() => visibleFieldsOf(this.fields(), this.rawValue()));
   private readonly optionsByKey = computed(() => optionsByKeyOf(this.fields(), this.rawValue()));
-  private readonly tokensByKey = computed(() => {
-    const tokensByKey = new Map<string, MaskToken[] | null>();
-    for (const field of this.fields()) {
-      tokensByKey.set(field.key, parseMask(field.mask));
-    }
-    return tokensByKey;
-  });
+  private readonly tokensByKey = computed(() => tokensByKeyOf(this.fields()));
 
   protected readonly renderedFields = computed<RenderedField[]>(() => {
     const context: RenderContext = {
@@ -72,57 +42,10 @@ export class DynamicFormComponent {
       recipient: this.recipient(),
       optionsByKey: this.optionsByKey(),
       tokensByKey: this.tokensByKey(),
+      lang: this.languageStore.lang(),
+      localize: this.languageStore.localize,
+      t: this.languageStore.t,
     };
-    return this.visibleFields().map((field) => this.renderField(field, context));
+    return this.visibleFields().map((field) => renderField(field, context));
   });
-
-  private renderField(field: Field, context: RenderContext): RenderedField {
-    const control = context.controls[field.key];
-    const base = {
-      key: field.key,
-      control,
-      label: this.languageStore.localize(field.name),
-      error: fieldErrorText(control.errors, context.recipient, this.languageStore.t),
-    };
-
-    if (isAmountField(field)) {
-      return {
-        ...base,
-        controlType: ControlType.Amount,
-        hint: amountHintOf(context.recipient, this.languageStore.t),
-        suffix: this.languageStore.t('sum'),
-      };
-    }
-
-    if (isSelectField(field)) {
-      return {
-        ...base,
-        controlType: ControlType.Select,
-        placeholder: this.languageStore.t('choose'),
-        options: this.selectOptionsOf(context.optionsByKey[field.key]),
-      };
-    }
-
-    const tokens = context.tokensByKey.get(field.key) ?? null;
-    return {
-      ...base,
-      controlType: ControlType.Text,
-      placeholder: placeholderOf(
-        field,
-        tokens,
-        this.languageStore.lang(),
-        this.languageStore.localize,
-      ),
-      tokens,
-      digitsOnly: isDigitsOnly(field),
-      inputMode: inputModeOf(field, tokens),
-    };
-  }
-
-  private selectOptionsOf(options: FieldOption[] | undefined): SelectOption[] {
-    return (options ?? []).map((option) => ({
-      value: option.value,
-      label: this.languageStore.localize(option.name),
-    }));
-  }
 }
