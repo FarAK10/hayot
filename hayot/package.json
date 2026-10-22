@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "start": "ng serve --configuration live",
     "start:live": "ng serve --configuration live",
     "dev": "concurrently \"npm:emulators\" \"ng serve\"",
     "emulators": "firebase emulators:start --only firestore,auth --project demo-payme",
