@@ -20,7 +20,7 @@ export class InMemoryTransactionApi extends TransactionApi {
     });
   }
 
-  override getHistory(): Observable<Transaction[]> {
+  override getTransactionsHistory(): Observable<Transaction[]> {
     return this.transactions$.asObservable();
   }
 }

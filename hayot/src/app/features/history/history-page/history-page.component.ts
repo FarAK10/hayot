@@ -19,6 +19,6 @@ export class HistoryPageComponent implements OnInit {
   protected readonly failed = this.transactionHistoryStore.failed;
 
   ngOnInit(): void {
-    this.transactionHistoryStore.getHistory();
+    this.transactionHistoryStore.getTransactionsHistory();
   }
 }

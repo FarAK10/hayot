@@ -13,11 +13,11 @@ export const TransactionHistoryStore = signalStore(
     failed: false,
   }),
   withMethods((store, api = inject(TransactionApi)) => ({
-    getHistory: rxMethod<void>(
+    getTransactionsHistory: rxMethod<void>(
       pipe(
         tap(() => patchState(store, { loading: true, failed: false })),
         switchMap(() =>
-          api.getHistory().pipe(
+          api.getTransactionsHistory().pipe(
             tap({
               next: (items) => patchState(store, { items, loading: false }),
               error: () => patchState(store, { loading: false, failed: true }),

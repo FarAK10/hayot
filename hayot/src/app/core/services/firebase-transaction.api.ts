@@ -14,7 +14,7 @@ export class FirebaseTransactionApi extends TransactionApi {
     return this.client$.pipe(switchMap((client) => client.makeTransaction(payload)));
   }
 
-  override getHistory(): Observable<Transaction[]> {
-    return this.client$.pipe(switchMap((client) => client.getHistory()));
+  override getTransactionsHistory(): Observable<Transaction[]> {
+    return this.client$.pipe(switchMap((client) => client.getTransactionsHistory()));
   }
 }

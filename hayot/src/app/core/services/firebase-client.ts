@@ -68,7 +68,7 @@ export class FirebaseClient implements TransactionApi {
     );
   }
 
-  getHistory(): Observable<Transaction[]> {
+  getTransactionsHistory(): Observable<Transaction[]> {
     return this.uid$.pipe(switchMap((uid) => this.getTransactions(uid)));
   }
 
