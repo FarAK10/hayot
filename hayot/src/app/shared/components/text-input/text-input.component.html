@@ -1,17 +1,37 @@
 @let error = this.error();
+@let tokens = this.mask();
 <mat-form-field appearance="outline" subscriptSizing="dynamic">
   <mat-label>{{ label() }}</mat-label>
-  <input
-    #field
-    matInput
-    [value]="display()"
-    [disabled]="disabled()"
-    [errorStateMatcher]="errorStateMatcher"
-    [attr.inputmode]="inputMode()"
-    [placeholder]="placeholder()"
-    (input)="onInput(field)"
-    (blur)="onBlur()"
-  />
+  @if (tokens) {
+    <input
+      matInput
+      [formControl]="field"
+      [appMask]="tokens"
+      [errorStateMatcher]="errorStateMatcher"
+      [attr.inputmode]="inputMode()"
+      [placeholder]="placeholder()"
+      (blur)="onBlur()"
+    />
+  } @else if (digitsOnly()) {
+    <input
+      matInput
+      appDigitsOnly
+      [formControl]="field"
+      [errorStateMatcher]="errorStateMatcher"
+      [attr.inputmode]="inputMode()"
+      [placeholder]="placeholder()"
+      (blur)="onBlur()"
+    />
+  } @else {
+    <input
+      matInput
+      [formControl]="field"
+      [errorStateMatcher]="errorStateMatcher"
+      [attr.inputmode]="inputMode()"
+      [placeholder]="placeholder()"
+      (blur)="onBlur()"
+    />
+  }
   @if (error) {
     <mat-error>{{ error }}</mat-error>
   }

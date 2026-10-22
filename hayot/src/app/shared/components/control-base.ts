@@ -5,17 +5,15 @@ import {
   Directive,
   OnInit,
   inject,
-  signal,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { AbstractControl, ControlValueAccessor, NgControl } from '@angular/forms';
+import { AbstractControl, ControlValueAccessor, FormControl, NgControl } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { noop } from '../../core/utils/noop.util';
 
 @Directive()
 export abstract class ControlBase<T> implements ControlValueAccessor, OnInit, AfterViewInit {
-  protected readonly value = signal<T | null>(null);
-  protected readonly disabled = signal(false);
+  protected readonly field = new FormControl<T | null>(null);
   protected readonly errorStateMatcher: ErrorStateMatcher = {
     isErrorState: () => this.invalid,
   };
@@ -32,6 +30,7 @@ export abstract class ControlBase<T> implements ControlValueAccessor, OnInit, Af
     if (this.ngControl) {
       this.ngControl.valueAccessor = this;
     }
+    this.field.valueChanges.pipe(takeUntilDestroyed()).subscribe((value) => this.onChange(value));
   }
 
   ngOnInit(): void {
@@ -50,7 +49,7 @@ export abstract class ControlBase<T> implements ControlValueAccessor, OnInit, Af
   }
 
   writeValue(value: T | null): void {
-    this.value.set(value);
+    this.field.setValue(value, { emitEvent: false });
   }
 
   registerOnChange(onChange: (value: T | null) => void): void {
@@ -62,12 +61,11 @@ export abstract class ControlBase<T> implements ControlValueAccessor, OnInit, Af
   }
 
   setDisabledState(disabled: boolean): void {
-    this.disabled.set(disabled);
-  }
-
-  protected emit(value: T | null): void {
-    this.value.set(value);
-    this.onChange(value);
+    if (disabled) {
+      this.field.disable({ emitEvent: false });
+    } else {
+      this.field.enable({ emitEvent: false });
+    }
   }
 
   protected markTouched(): void {

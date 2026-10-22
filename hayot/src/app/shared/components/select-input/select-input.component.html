@@ -2,11 +2,9 @@
 <mat-form-field appearance="outline" subscriptSizing="dynamic">
   <mat-label>{{ label() }}</mat-label>
   <mat-select
-    [value]="value()"
-    [disabled]="disabled()"
+    [formControl]="field"
     [errorStateMatcher]="errorStateMatcher"
     [placeholder]="placeholder()"
-    (selectionChange)="onSelectionChange($event)"
     (openedChange)="onOpenedChange($event)"
   >
     @for (option of options(); track option.value) {

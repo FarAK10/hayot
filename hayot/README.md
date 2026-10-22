@@ -51,7 +51,7 @@ Stays on the free **Spark** plan: no Cloud Functions or Storage.
 src/app/
 ├── core/       models, stores (SignalStore), transaction API (Firebase / local), form engine, pure utils (mask, amount, search)
 ├── header/     app header (search, language switch, history link)
-├── shared/     logo, text / amount / select inputs (ControlValueAccessors), UI strings
+├── shared/     logo, text / amount / select inputs (ControlValueAccessors), input directives (mask, digits-only, amount), UI strings
 └── features/
     ├── payment/      catalog pages, category sections, recipient cards, search results
     ├── transaction/  payment modal, dynamic form
