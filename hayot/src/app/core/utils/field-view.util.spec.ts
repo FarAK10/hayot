@@ -52,21 +52,20 @@ describe('field view helpers', () => {
   });
 
   describe('placeholderOf', () => {
-    it('prefers the field placeholder in Russian', () => {
+    it('prefers the field placeholder', () => {
       const field = textField({ placeholder: CUSTOM_PLACEHOLDER });
 
-      expect(placeholderOf(field, phoneTokens, 'ru', localizeEnglish)).toBe(CUSTOM_PLACEHOLDER);
+      expect(placeholderOf(field, phoneTokens, localizeEnglish)).toBe(CUSTOM_PLACEHOLDER);
     });
 
-    it('shows the mask template when the placeholder does not apply', () => {
-      const field = textField({ placeholder: CUSTOM_PLACEHOLDER });
+    it('shows the mask template when there is no placeholder', () => {
       const expected = maskTemplate(phoneTokens);
 
-      expect(placeholderOf(field, phoneTokens, 'en', localizeEnglish)).toBe(expected);
+      expect(placeholderOf(textField({}), phoneTokens, localizeEnglish)).toBe(expected);
     });
 
     it('falls back to the localized description', () => {
-      expect(placeholderOf(textField({}), null, 'en', localizeEnglish)).toBe(DESCRIPTION.en);
+      expect(placeholderOf(textField({}), null, localizeEnglish)).toBe(DESCRIPTION.en);
     });
   });
 

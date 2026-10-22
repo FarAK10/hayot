@@ -1,3 +1,4 @@
+import { Lang } from '../models/catalog.models';
 import { getInitials, interpolate, localize } from './text.util';
 
 describe('getInitials', () => {
@@ -16,17 +17,17 @@ describe('getInitials', () => {
 
 describe('localize', () => {
   it('returns the current language', () => {
-    expect(localize({ ru: 'А', uz: 'B', en: 'C' }, 'uz')).toBe('B');
+    expect(localize({ ru: 'А', uz: 'B', en: 'C' }, Lang.Uz)).toBe('B');
   });
   it('falls back ru -> uz -> en', () => {
-    expect(localize({ ru: 'А', en: 'C' }, 'uz')).toBe('А');
-    expect(localize({ uz: 'B', en: 'C' }, 'en' as const)).toBe('C');
-    expect(localize({ uz: 'B' }, 'en')).toBe('B');
-    expect(localize({ en: 'C' }, 'uz')).toBe('C');
-    expect(localize(undefined, 'ru')).toBe('');
+    expect(localize({ ru: 'А', en: 'C' }, Lang.Uz)).toBe('А');
+    expect(localize({ uz: 'B', en: 'C' }, Lang.En)).toBe('C');
+    expect(localize({ uz: 'B' }, Lang.En)).toBe('B');
+    expect(localize({ en: 'C' }, Lang.Uz)).toBe('C');
+    expect(localize(undefined, Lang.Ru)).toBe('');
   });
   it('trims', () => {
-    expect(localize({ en: 'Beeline ' }, 'en')).toBe('Beeline');
+    expect(localize({ en: 'Beeline ' }, Lang.En)).toBe('Beeline');
   });
 });
 

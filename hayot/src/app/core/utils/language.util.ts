@@ -2,7 +2,7 @@ import { LANG_STORAGE_KEY } from '../config/app.config.constants';
 import { LANGS, Lang } from '../models/catalog.models';
 import { readStorage, writeStorage } from './storage.util';
 
-export const DEFAULT_LANG: Lang = 'ru';
+export const DEFAULT_LANG = Lang.Ru;
 
 const isLang = (value: string | null): value is Lang =>
   !!value && (LANGS as readonly string[]).includes(value);

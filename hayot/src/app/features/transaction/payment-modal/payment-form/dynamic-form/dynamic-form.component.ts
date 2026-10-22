@@ -42,7 +42,6 @@ export class DynamicFormComponent {
       recipient: this.recipient(),
       optionsByKey: this.optionsByKey(),
       tokensByKey: this.tokensByKey(),
-      lang: this.languageStore.lang(),
       localize: this.languageStore.localize,
       t: this.languageStore.t,
     };

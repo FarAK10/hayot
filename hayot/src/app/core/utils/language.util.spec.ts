@@ -1,3 +1,4 @@
+import { Lang } from '../models/catalog.models';
 import { LANG_STORAGE_KEY } from '../config/app.config.constants';
 import { DEFAULT_LANG, persistLang, readStoredLang } from './language.util';
 
@@ -13,9 +14,9 @@ describe('language.util', () => {
     expect(readStoredLang()).toBe(DEFAULT_LANG);
   });
   it('round-trips a persisted language and updates <html lang>', () => {
-    persistLang('uz');
+    persistLang(Lang.Uz);
 
-    expect(readStoredLang()).toBe('uz');
-    expect(document.documentElement.lang).toBe('uz');
+    expect(readStoredLang()).toBe(Lang.Uz);
+    expect(document.documentElement.lang).toBe(Lang.Uz);
   });
 });

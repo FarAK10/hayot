@@ -1,3 +1,4 @@
+import { Lang } from '../models/catalog.models';
 import { AMOUNT_DIVISOR, CURRENCY, PERCENT_BASE } from '../config/app.config.constants';
 import { TransactionPayload } from '../models/transaction.models';
 import { RecipientId, Region, fieldsOf, recipientOf } from '../../testing/catalog.fixture';
@@ -28,7 +29,7 @@ describe('buildPayload', () => {
       commissionAmount: COMMISSION_TIYIN,
       total: AMOUNT_TIYIN + COMMISSION_TIYIN,
       currency: CURRENCY,
-      lang: 'ru',
+      lang: Lang.Ru,
       keyValue: [
         { key: 'REGION', value: formValue.REGION },
         { key: 'soato', value: formValue.soato },
@@ -38,13 +39,13 @@ describe('buildPayload', () => {
       ],
     };
 
-    expect(buildPayload(electricity, electricityFields, formValue, 'ru')).toEqual(expected);
+    expect(buildPayload(electricity, electricityFields, formValue, Lang.Ru)).toEqual(expected);
   });
 
   it('excludes hidden (missing) and empty fields', () => {
     const partialValue = { customer_code: '123456', summa: 500, soato: '' };
 
-    const payload = buildPayload(electricity, electricityFields, partialValue, 'en');
+    const payload = buildPayload(electricity, electricityFields, partialValue, Lang.En);
 
     expect(payload.keyValue.map((pair) => pair.key)).toEqual(['customer_code', 'summa']);
   });
@@ -60,7 +61,7 @@ describe('buildPayload', () => {
       { key: 'summa', value: String(oddAmountTiyin) },
     ];
 
-    const payload = buildPayload(beeline, fieldsOf(RecipientId.Beeline), beelineValue, 'uz');
+    const payload = buildPayload(beeline, fieldsOf(RecipientId.Beeline), beelineValue, Lang.Uz);
 
     expect(payload.amount).toBe(oddAmountTiyin);
     expect(payload.commissionAmount).toBe(roundedCommission);

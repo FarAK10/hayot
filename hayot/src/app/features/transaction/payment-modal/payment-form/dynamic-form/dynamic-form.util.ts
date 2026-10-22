@@ -2,7 +2,6 @@ import { DynamicControl } from '../../../../../core/form-engine/utils/dynamic-co
 import {
   Field,
   FieldOption,
-  Lang,
   Recipient,
   isAmountField,
   isSelectField,
@@ -24,7 +23,6 @@ export interface RenderContext {
   recipient: Recipient;
   optionsByKey: Record<string, FieldOption[]>;
   tokensByKey: Map<string, MaskToken[] | null>;
-  lang: Lang;
   localize: LocalizeFn;
   t: TranslateFn;
 }
@@ -75,7 +73,7 @@ export function renderField(field: Field, context: RenderContext): RenderedField
   return {
     ...base,
     controlType: ControlType.Text,
-    placeholder: placeholderOf(field, tokens, context.lang, localize),
+    placeholder: placeholderOf(field, tokens, localize),
     tokens,
     digitsOnly: isDigitsOnly(field),
     inputMode: inputModeOf(field, tokens),

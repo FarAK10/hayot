@@ -1,3 +1,4 @@
+import { Lang } from '../models/catalog.models';
 import { AMOUNT_DIVISOR } from '../config/app.config.constants';
 import { KeyValue } from '../models/transaction.models';
 import { RecipientId, Region, fieldOf, selectFieldOf } from '../../testing/catalog.fixture';
@@ -15,18 +16,20 @@ describe('toDetailRow', () => {
 
   it('uses the localized field name as the label', () => {
     const pair: KeyValue = { key: 'customer_code', value: '1234567' };
-    const expected = { key: pair.key, label: localize(codeField.name, 'en'), value: pair.value };
+    const expected = { key: pair.key, label: localize(codeField.name, Lang.En), value: pair.value };
 
-    expect(toDetailRow(pair, codeField, 'en', SUM_LABEL)).toEqual(expected);
+    expect(toDetailRow(pair, codeField, Lang.En, SUM_LABEL)).toEqual(expected);
   });
 
   it('shows the option name instead of a select value, in the active language', () => {
     const pair: KeyValue = { key: 'REGION', value: Region.TashkentCity };
     const option = regionField.options.find((candidate) => candidate.value === pair.value)!;
 
-    expect(toDetailRow(pair, regionField, 'uz', SUM_LABEL).value).toBe(localize(option.name, 'uz'));
-    expect(toDetailRow(pair, regionField, 'ru', SUM_LABEL).label).toBe(
-      localize(regionField.name, 'ru'),
+    expect(toDetailRow(pair, regionField, Lang.Uz, SUM_LABEL).value).toBe(
+      localize(option.name, Lang.Uz),
+    );
+    expect(toDetailRow(pair, regionField, Lang.Ru, SUM_LABEL).label).toBe(
+      localize(regionField.name, Lang.Ru),
     );
   });
 
@@ -35,19 +38,19 @@ describe('toDetailRow', () => {
     const pair: KeyValue = { key: 'summa', value: String(amountSum * AMOUNT_DIVISOR) };
     const expectedValue = `${formatTiyin(amountSum * AMOUNT_DIVISOR)} ${SUM_LABEL}`;
 
-    expect(toDetailRow(pair, amountField, 'ru', SUM_LABEL).value).toBe(expectedValue);
+    expect(toDetailRow(pair, amountField, Lang.Ru, SUM_LABEL).value).toBe(expectedValue);
   });
 
   it('formats a masked phone number with its mask', () => {
     const pair: KeyValue = { key: 'phone_number', value: '901234567' };
 
-    expect(toDetailRow(pair, phoneField, 'ru', SUM_LABEL).value).toBe('998(90) 123-45-67');
+    expect(toDetailRow(pair, phoneField, Lang.Ru, SUM_LABEL).value).toBe('998(90) 123-45-67');
   });
 
   it('falls back to the raw pair when the field is unknown', () => {
     const pair: KeyValue = { key: 'legacy_key', value: 'abc' };
     const expected = { key: pair.key, label: pair.key, value: pair.value };
 
-    expect(toDetailRow(pair, undefined, 'ru', SUM_LABEL)).toEqual(expected);
+    expect(toDetailRow(pair, undefined, Lang.Ru, SUM_LABEL)).toEqual(expected);
   });
 });

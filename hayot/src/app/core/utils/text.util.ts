@@ -15,7 +15,7 @@ export function localize(text: Localized | null | undefined, lang: Lang): string
   if (!text) {
     return '';
   }
-  return (text[lang] ?? text.ru ?? text.uz ?? text.en ?? '').trim();
+  return (text[lang] ?? text[Lang.Ru] ?? text[Lang.Uz] ?? text[Lang.En] ?? '').trim();
 }
 
 export function interpolate(template: string, params: InterpolationParams = {}): string {

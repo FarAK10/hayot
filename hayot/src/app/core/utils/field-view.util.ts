@@ -1,6 +1,6 @@
 import { InputMode } from '../../shared/models/input-mode.model';
 import { AMOUNT_DIVISOR } from '../config/app.config.constants';
-import { Field, FieldType, Lang, Localized, Recipient } from '../models/catalog.models';
+import { Field, FieldType, Localized, Recipient } from '../models/catalog.models';
 import { formatSum } from './amount.util';
 import { TranslateFn } from './field-error.util';
 import { MaskToken, maskTemplate } from './mask.util';
@@ -24,10 +24,9 @@ export function inputModeOf(field: Field, tokens: MaskToken[] | null): InputMode
 export function placeholderOf(
   field: Field,
   tokens: MaskToken[] | null,
-  lang: Lang,
   localizeText: LocalizeFn,
 ): string {
-  if (field.placeholder && lang === 'ru') {
+  if (field.placeholder) {
     return field.placeholder;
   }
   if (tokens) {

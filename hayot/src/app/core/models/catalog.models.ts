@@ -1,5 +1,9 @@
-export type Lang = 'ru' | 'uz' | 'en';
-export const LANGS: readonly Lang[] = ['ru', 'uz', 'en'];
+export enum Lang {
+  Ru = 'ru',
+  Uz = 'uz',
+  En = 'en',
+}
+export const LANGS: readonly Lang[] = Object.values(Lang);
 
 export type Localized = Partial<Record<Lang, string>>;
 
