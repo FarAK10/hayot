@@ -5,7 +5,7 @@ import { pipe, switchMap, tap } from 'rxjs';
 import { Transaction } from '../../models/transaction.models';
 import { TransactionApi } from '../../services/transaction.api';
 
-export const HistoryStore = signalStore(
+export const TransactionHistoryStore = signalStore(
   { providedIn: 'root' },
   withState<{ items: Transaction[]; loading: boolean; failed: boolean }>({
     items: [],
@@ -17,7 +17,7 @@ export const HistoryStore = signalStore(
       pipe(
         tap(() => patchState(store, { loading: true, failed: false })),
         switchMap(() =>
-          api.history().pipe(
+          api.getHistory().pipe(
             tap({
               next: (items) => patchState(store, { items, loading: false }),
               error: () => patchState(store, { loading: false, failed: true }),

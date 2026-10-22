@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/core';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatProgressBar } from '@angular/material/progress-bar';
-import { HistoryStore } from '../../../core/stores/history/history.store';
+import { TransactionHistoryStore } from '../../../core/stores/transaction-history/transaction-history.store';
 import { TranslatePipe } from '../../../shared/pipes/translate.pipe';
 import { HistoryItemComponent } from './history-item/history-item.component';
 
@@ -13,12 +13,12 @@ import { HistoryItemComponent } from './history-item/history-item.component';
   styleUrl: './history-page.component.scss',
 })
 export class HistoryPageComponent implements OnInit {
-  private readonly historyStore = inject(HistoryStore);
-  protected readonly items = this.historyStore.items;
-  protected readonly loading = this.historyStore.loading;
-  protected readonly failed = this.historyStore.failed;
+  private readonly transactionHistoryStore = inject(TransactionHistoryStore);
+  protected readonly items = this.transactionHistoryStore.items;
+  protected readonly loading = this.transactionHistoryStore.loading;
+  protected readonly failed = this.transactionHistoryStore.failed;
 
   ngOnInit(): void {
-    this.historyStore.getHistory();
+    this.transactionHistoryStore.getHistory();
   }
 }

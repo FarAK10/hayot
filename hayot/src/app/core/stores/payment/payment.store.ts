@@ -21,7 +21,7 @@ export const PaymentStore = signalStore(
       pipe(
         tap((payload) => patchState(store, { status: PaymentStatus.Pending, payload })),
         exhaustMap((payload) =>
-          api.create(payload).pipe(
+          api.makeTransaction(payload).pipe(
             tap((transactionId) =>
               patchState(store, { status: PaymentStatus.Success, transactionId }),
             ),

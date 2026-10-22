@@ -10,11 +10,11 @@ export class FirebaseTransactionApi extends TransactionApi {
     shareReplay({ bufferSize: 1, refCount: false }),
   );
 
-  override create(payload: TransactionPayload): Observable<string> {
-    return this.client$.pipe(switchMap((client) => client.create(payload)));
+  override makeTransaction(payload: TransactionPayload): Observable<string> {
+    return this.client$.pipe(switchMap((client) => client.makeTransaction(payload)));
   }
 
-  override history(): Observable<Transaction[]> {
-    return this.client$.pipe(switchMap((client) => client.history()));
+  override getHistory(): Observable<Transaction[]> {
+    return this.client$.pipe(switchMap((client) => client.getHistory()));
   }
 }

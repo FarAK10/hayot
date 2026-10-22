@@ -58,7 +58,7 @@ src/app/
     └── history/      past transactions
 ```
 
-**Stores:** `CatalogStore` (sorted catalog + lookups), `LanguageStore` (language, `localize`, UI strings), `SearchStore`, `PaymentStore` (submit flow), `HistoryStore`.
+**Stores:** `CatalogStore` (sorted catalog + lookups), `LanguageStore` (language, `localize`, UI strings), `SearchStore`, `PaymentStore` (submit flow), `TransactionHistoryStore`.
 
 **Form engine:** `FIELD_COMPONENTS` registry (type → component, unknown → TEXT) → `buildValidators` (field → validators) → `FormBuilderService` (FormGroup, visibility, resets, auto-select; hidden controls are disabled so `form.value` only contains visible fields) → `buildPayload` (pure, builds the payload).
 

@@ -52,7 +52,7 @@ export class FirebaseClient implements TransactionApi {
     }
   }
 
-  create(payload: TransactionPayload): Observable<string> {
+  makeTransaction(payload: TransactionPayload): Observable<string> {
     return this.uid$.pipe(
       switchMap((uid) =>
         from(
@@ -68,7 +68,7 @@ export class FirebaseClient implements TransactionApi {
     );
   }
 
-  history(): Observable<Transaction[]> {
+  getHistory(): Observable<Transaction[]> {
     return this.uid$.pipe(switchMap((uid) => this.getTransactions(uid)));
   }
 

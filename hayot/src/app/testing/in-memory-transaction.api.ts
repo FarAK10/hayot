@@ -7,7 +7,7 @@ import { TransactionApi } from '../core/services/transaction.api';
 export class InMemoryTransactionApi extends TransactionApi {
   private readonly transactions$ = new BehaviorSubject<Transaction[]>([]);
 
-  override create(payload: TransactionPayload): Observable<string> {
+  override makeTransaction(payload: TransactionPayload): Observable<string> {
     return defer(() => {
       const transaction: Transaction = {
         ...payload,
@@ -20,7 +20,7 @@ export class InMemoryTransactionApi extends TransactionApi {
     });
   }
 
-  override history(): Observable<Transaction[]> {
+  override getHistory(): Observable<Transaction[]> {
     return this.transactions$.asObservable();
   }
 }
