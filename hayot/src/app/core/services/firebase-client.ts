@@ -3,7 +3,6 @@ import { FirebaseApp, initializeApp } from 'firebase/app';
 import { Auth, connectAuthEmulator, getAuth, signInAnonymously } from 'firebase/auth';
 import {
   Firestore,
-  QueryDocumentSnapshot,
   addDoc,
   collection,
   connectFirestoreEmulator,
@@ -25,13 +24,8 @@ import {
   TRANSACTIONS_COLLECTION,
 } from '../config/app.config.constants';
 import { PaymentStatus, Transaction, TransactionPayload } from '../models/transaction.models';
+import { toTransaction } from '../utils/transaction.util';
 import { TransactionApi } from './transaction.api';
-
-function toTransaction(document: QueryDocumentSnapshot): Transaction {
-  const data = document.data({ serverTimestamps: 'estimate' });
-  const createdAt = data['createdAt']?.toMillis() ?? Date.now();
-  return { ...data, id: document.id, createdAt } as Transaction;
-}
 
 @Injectable({ providedIn: 'root' })
 export class FirebaseClient implements TransactionApi {
