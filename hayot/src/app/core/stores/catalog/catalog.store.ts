@@ -48,8 +48,8 @@ export const CatalogStore = signalStore(
       ),
     };
   }),
-  withMethods((store, http = inject(HttpClient)) => ({
-    load: rxMethod<void>(
+  withMethods((store, http = inject(HttpClient)) => {
+    const load = rxMethod<void>(
       pipe(
         tap(() => patchState(store, { status: LoadStatus.Loading })),
         switchMap(() =>
@@ -64,15 +64,24 @@ export const CatalogStore = signalStore(
           ),
         ),
       ),
-    ),
-    setSearchQuery(query: string): void {
-      patchState(store, { query });
-    },
-    recipientsOf: (categoryId: number): Recipient[] =>
-      store.recipientsByCategory().get(categoryId) ?? [],
-    getCategoryById: (id: number): Category | undefined => store.categoryById().get(id),
-    getRecipientById: (id: number): Recipient | undefined => store.recipientById().get(id),
-    getFieldsFor: (recipientId: number): Field[] =>
-      store.fieldsByRecipient().get(recipientId) ?? [],
-  })),
+    );
+
+    return {
+      load,
+      loadOnce(): void {
+        if (store.status() === LoadStatus.Idle) {
+          load();
+        }
+      },
+      setSearchQuery(query: string): void {
+        patchState(store, { query });
+      },
+      recipientsOf: (categoryId: number): Recipient[] =>
+        store.recipientsByCategory().get(categoryId) ?? [],
+      getCategoryById: (id: number): Category | undefined => store.categoryById().get(id),
+      getRecipientById: (id: number): Recipient | undefined => store.recipientById().get(id),
+      getFieldsFor: (recipientId: number): Field[] =>
+        store.fieldsByRecipient().get(recipientId) ?? [],
+    };
+  }),
 );

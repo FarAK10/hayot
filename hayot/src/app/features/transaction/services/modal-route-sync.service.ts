@@ -29,12 +29,18 @@ export class ModalRouteSync {
   private readonly route = inject(ActivatedRoute);
   private readonly catalogStore = inject(CatalogStore);
 
+  private initialized = false;
+
   private readonly recipientParam$ = this.route.queryParamMap.pipe(
     map((params) => params.get(RECIPIENT_QUERY_PARAM)),
     distinctUntilChanged(),
   );
 
   init(): void {
+    if (this.initialized) {
+      return;
+    }
+    this.initialized = true;
     toObservable(this.catalogStore.loading, { injector: this.injector })
       .pipe(
         filter((loading) => !loading),

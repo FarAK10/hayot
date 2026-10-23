@@ -1,10 +1,18 @@
-import { ChangeDetectionStrategy, Component, effect, inject, untracked } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnInit,
+  effect,
+  inject,
+  untracked,
+} from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
 import { MatButton } from '@angular/material/button';
 import { map } from 'rxjs';
 import { SEARCH_QUERY_PARAM, SKELETON_COUNT } from '../../../core/config/app.config.constants';
 import { CatalogStore } from '../../../core/stores/catalog/catalog.store';
+import { ModalRouteSync } from '../../transaction/services/modal-route-sync.service';
 import { CategorySectionComponent } from '../category-section/category-section.component';
 import { TranslatePipe } from '../../../shared/pipes/translate.pipe';
 
@@ -15,8 +23,9 @@ import { TranslatePipe } from '../../../shared/pipes/translate.pipe';
   templateUrl: './payment-page.component.html',
   styleUrl: './payment-page.component.scss',
 })
-export class PaymentPageComponent {
+export class PaymentPageComponent implements OnInit {
   private readonly catalogStore = inject(CatalogStore);
+  private readonly modalRouteSync = inject(ModalRouteSync);
   protected readonly query = this.catalogStore.query;
   protected readonly loading = this.catalogStore.loading;
   protected readonly failed = this.catalogStore.failed;
@@ -38,6 +47,11 @@ export class PaymentPageComponent {
         }
       });
     });
+  }
+
+  ngOnInit(): void {
+    this.catalogStore.loadOnce();
+    this.modalRouteSync.init();
   }
 
   protected reload(): void {

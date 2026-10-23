@@ -1,3 +1,4 @@
+import { Injectable } from '@angular/core';
 import { FirebaseApp, initializeApp } from 'firebase/app';
 import { Auth, connectAuthEmulator, getAuth, signInAnonymously } from 'firebase/auth';
 import {
@@ -32,6 +33,7 @@ function toTransaction(document: QueryDocumentSnapshot): Transaction {
   return { ...data, id: document.id, createdAt } as Transaction;
 }
 
+@Injectable({ providedIn: 'root' })
 export class FirebaseClient implements TransactionApi {
   private readonly app: FirebaseApp = initializeApp(environment.firebase);
   private readonly auth: Auth = getAuth(this.app);
